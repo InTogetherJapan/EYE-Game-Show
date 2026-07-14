@@ -1,9 +1,412 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" name="viewport"/><title>EYE Game Show Practice v3.16</title><link rel="stylesheet" href="css/app.css">
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" name="viewport"/><title>EYE Game Show Practice v3.16</title><style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0d0d0d;color:#fff;font-family:Arial,Helvetica,sans-serif}button,input{font:inherit}#app{display:grid;grid-template-columns:minmax(230px,18vw) 1fr;width:100vw;height:100vh}#sidebar{background:#171717;border-right:1px solid rgba(255,255,255,.14);padding:14px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}#sidebar h1{margin:0;font-size:clamp(20px,2vw,28px)}.sub{margin:0;color:rgba(255,255,255,.68);font-size:13px}#teams{display:grid;gap:10px}.team-card{background:#232323;border:2px solid transparent;border-radius:16px;padding:10px;transition:.15s}.team-card.award-ready{border-color:rgba(255,255,255,.7);box-shadow:0 0 0 3px rgba(255,255,255,.08);cursor:pointer}.team-card.award-ready:hover{transform:translateY(-1px)}.team-card.awarded{opacity:.58}.team-top{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}.team-number{width:34px;height:34px;border-radius:50%;background:#3a3a3a;display:grid;place-items:center;font-weight:800}.team-name{width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.14);background:transparent;color:#fff;font-weight:700;font-size:18px;outline:none;padding:3px 2px}.score{text-align:center;font-size:clamp(34px,4vw,56px);font-weight:900;font-variant-numeric:tabular-nums;margin:5px 0 7px}.adjust-row{display:grid;grid-template-columns:1fr 58px 58px;gap:6px}.adjust-input{min-width:0;border:1px solid rgba(255,255,255,.14);border-radius:9px;background:#111;color:#fff;padding:7px 8px;text-align:center}.small-btn,.control-btn{border:0;border-radius:9px;background:#444;color:#fff;font-weight:800;cursor:pointer}.small-btn{padding:7px 8px}#activeBox{background:#101010;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px;text-align:center}#activeLabel{color:rgba(255,255,255,.68);font-size:12px;text-transform:uppercase;letter-spacing:.1em}#activeValue{margin-top:4px;font-size:22px;font-weight:800;min-height:27px}#controls{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}.control-btn{padding:10px 8px;background:#333}#undoBtn:disabled{opacity:.35;cursor:default}#main{position:relative;display:grid;place-items:center;padding:10px;min-width:0;min-height:0}#board{position:relative;width:min(100%,calc((100vh - 20px)*2048/1860));aspect-ratio:2048/1860;max-height:calc(100vh - 20px);background-image:url("assets/001-1e8d52acdb71.png");background-size:100% 100%;user-select:none}.tile{position:absolute;border:0;padding:0;margin:0;background:transparent;cursor:pointer;outline:none}.tile::after{content:"";position:absolute;inset:0;background:#000;opacity:0;transition:opacity .14s;pointer-events:none}.tile.used::after{opacity:.76}.tile.active::before{content:"";position:absolute;inset:4px;border:6px solid rgba(255,255,255,.95);box-sizing:border-box;pointer-events:none;z-index:2}.tile:not(.used):hover::before{content:"";position:absolute;inset:4px;border:4px solid rgba(255,255,255,.72);box-sizing:border-box;pointer-events:none}#questionView{display:none;position:absolute;inset:10px;grid-template-columns:minmax(0,1fr) clamp(220px,22vw,330px);gap:12px;min-width:0;min-height:0}#questionView.show{display:grid}#questionImageWrap{min-width:0;min-height:0;display:grid;place-items:center;background:#fff;border-radius:18px;overflow:hidden}#questionImage{display:block;width:100%;height:100%;object-fit:contain}#timerPanel{min-width:0;background:rgba(20,20,20,.98);border:3px solid rgba(255,255,255,.22);border-radius:20px;padding:18px 14px;text-align:center;box-shadow:0 18px 55px rgba(0,0,0,.48);display:flex;flex-direction:column;justify-content:center;overflow:auto}#selectedTile{font-size:clamp(19px,2vw,28px);font-weight:800;line-height:1.15}#levelLabel{margin-top:5px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;opacity:.65}#timerDisplay{font-size:clamp(66px,9vw,128px);line-height:.95;font-weight:900;font-variant-numeric:tabular-nums;margin:20px 0}#timerDisplay.finished{animation:pulse .7s infinite alternate}@keyframes pulse{to{transform:scale(1.04);opacity:.55}}#timerButtons{display:grid;grid-template-columns:1fr 1fr;gap:10px}#timerButtons button{min-width:0;border:0;border-radius:12px;padding:12px 8px;font-size:clamp(15px,1.35vw,19px);font-weight:800;cursor:pointer}#pauseButton{background:#fff;color:#111}#resetTimerButton{background:#d9d9d9;color:#111}#answerTimerButton{background:#f0a33a;color:#111}#closeTimerButton{grid-column:1/-1;background:#444;color:#fff}#timerHint{margin-top:14px;font-size:13px;line-height:1.35;opacity:.65}#timerPanel.answer-mode{border-color:#f0a33a;box-shadow:0 18px 55px rgba(0,0,0,.48),0 0 0 4px rgba(240,163,58,.13)}#timerPanel.answer-mode #timerDisplay{color:#ffd28f}#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:rgba(0,0,0,.86);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:10px 18px;opacity:0;pointer-events:none;transition:.18s;z-index:80;white-space:nowrap}#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(max-width:900px){#app{grid-template-columns:205px 1fr}#questionView{grid-template-columns:minmax(0,1fr) 215px;gap:8px;inset:7px}#timerPanel{padding:12px 9px}#timerButtons{grid-template-columns:1fr}#closeTimerButton{grid-column:auto}#sidebar{padding:9px}.team-card{padding:8px}.score{font-size:34px}.team-name{font-size:15px}.adjust-row{grid-template-columns:1fr 46px 46px}}
 
+/* Mobile spacing only — original timer and scoring JavaScript is untouched. */
+#rotateNotice{display:none}
 
+@media (orientation:portrait) and (max-width:760px){
+  #rotateNotice{
+    display:grid;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    place-items:center;
+    padding:28px;
+    background:#111;
+    color:#fff;
+    text-align:center;
+    font-size:21px;
+    line-height:1.4
+  }
+}
 
-</head><body><div id="modeChooser" hidden><div class="mode-card"><div class="mode-brand"><img class="mode-logo" src="images/items/item-7af61605bdf3.png" alt="Express Yourself Expo"><div class="mode-title">Q&amp;A GAME SHOW</div><div class="mode-event-details">Sunday, November 15 • Nagoya International School</div><a class="mode-learn-more" href="https://intogether.jp/eye-expo" target="_blank" rel="noopener noreferrer">Learn More About EYE</a></div><p>How will you use the Game Show today?</p><div class="mode-options"><button class="mode-option" id="eventModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span><span class="tv-icon"></span></span><strong>Two Displays</strong><small>Use the MC controls on your computer and show the Game Board on a TV or projector.</small><span class="mode-recommended">FULL EVENT MODE</span></button><button class="mode-option" id="classroomModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span></span><strong>One Display</strong><small>Use the Game Board, timer, PDFs, and score controls together on one screen.</small><span class="mode-recommended">CLASSROOM MODE</span></button></div><div class="mode-developer"><span>Developed by</span><img src="images/items/item-51a1b6c0f0ed.png" alt="InTogether"></div></div></div>
+@media (orientation:landscape) and (max-height:600px){
+  html,body{
+    width:100%;
+    height:100%;
+    height:100dvh;
+  }
+
+  #app{
+    width:100vw;
+    height:100dvh;
+    grid-template-columns:clamp(150px,24vw,205px) minmax(0,1fr);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+
+  #sidebar{
+    height:100dvh;
+    min-height:0;
+    overflow:hidden;
+    padding:4px;
+    gap:3px;
+    display:grid;
+    grid-template-rows:1fr auto auto;
+  }
+
+  #sidebar > div:first-child{
+    display:none;
+  }
+
+  #teams{
+    min-height:0;
+    display:grid;
+    grid-template-rows:repeat(4,minmax(0,1fr));
+    gap:3px;
+  }
+
+  .team-card{
+    min-height:0;
+    padding:3px 4px;
+    border-radius:7px;
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+    align-items:center;
+  }
+
+  .team-top{
+    grid-template-columns:20px minmax(0,1fr);
+    gap:3px;
+  }
+
+  .team-number{
+    width:20px;
+    height:20px;
+    font-size:10px;
+  }
+
+  .team-name{
+    min-width:0;
+    font-size:10px;
+    line-height:1;
+    padding:0 1px;
+  }
+
+  .score{
+    margin:0;
+    line-height:1;
+    font-size:clamp(17px,5.8vh,27px);
+  }
+
+  .adjust-row{
+    grid-template-columns:minmax(0,1fr) 27px 27px;
+    gap:2px;
+  }
+
+  .adjust-input{
+    width:100%;
+    min-width:0;
+    height:21px;
+    padding:1px 2px;
+    border-radius:5px;
+    font-size:9px;
+  }
+
+  .small-btn{
+    height:21px;
+    padding:0;
+    border-radius:5px;
+    font-size:13px;
+  }
+
+  #activeBox{
+    padding:3px;
+    border-radius:6px;
+  }
+
+  #activeLabel{
+    font-size:7px;
+  }
+
+  #activeValue{
+    min-height:11px;
+    margin-top:0;
+    font-size:10px;
+    line-height:1.05;
+  }
+
+  #controls{
+    margin-top:0;
+    gap:3px;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .control-btn{
+    min-height:23px;
+    padding:3px 1px;
+    border-radius:5px;
+    font-size:8px;
+    line-height:1;
+  }
+
+  #main{
+    min-width:0;
+    min-height:0;
+    overflow:hidden;
+    padding:3px;
+  }
+
+  #board{
+    width:min(100%,calc((100dvh - 6px)*2048/1860));
+    max-height:calc(100dvh - 6px);
+  }
+
+  #timerPanel{
+    width:min(470px,88vw);
+    max-height:92dvh;
+    padding:12px 14px;
+    border-radius:16px;
+  }
+
+  #selectedTile{
+    font-size:17px;
+    margin-bottom:2px;
+  }
+
+  #timerDisplay{
+    font-size:clamp(62px,27vh,110px);
+    line-height:.9;
+    margin:5px 0 10px;
+  }
+
+  #timerButtons{
+    gap:6px;
+  }
+
+  #timerButtons button{
+    min-width:84px;
+    padding:7px 9px;
+    border-radius:8px;
+    font-size:13px;
+  }
+
+  #timerHint{
+    margin-top:7px;
+    font-size:9px;
+  }
+}
+
+@media (orientation:landscape) and (max-height:390px){
+  #app{
+    grid-template-columns:140px minmax(0,1fr);
+  }
+
+  #sidebar{
+    padding:2px;
+    gap:2px;
+  }
+
+  #teams{
+    gap:2px;
+  }
+
+  .team-card{
+    padding:2px 3px;
+  }
+
+  .team-top{
+    grid-template-columns:17px minmax(0,1fr);
+  }
+
+  .team-number{
+    width:17px;
+    height:17px;
+    font-size:8px;
+  }
+
+  .team-name{
+    font-size:8px;
+  }
+
+  .score{
+    font-size:15px;
+  }
+
+  .adjust-row{
+    grid-template-columns:minmax(0,1fr) 23px 23px;
+  }
+
+  .adjust-input,.small-btn{
+    height:17px;
+    font-size:8px;
+  }
+
+  #activeBox{
+    display:none;
+  }
+
+  .control-btn{
+    min-height:19px;
+    font-size:7px;
+    padding:2px 1px;
+  }
+}
+
+#answerTimerButton{background:#f0a33a;color:#111}
+#timerPanel.answer-mode{border-color:#f0a33a;box-shadow:0 24px 80px rgba(0,0,0,.55),0 0 0 4px rgba(240,163,58,.13)}
+#timerPanel.answer-mode #timerDisplay{color:#ffd28f}
+
+#audienceStatus{padding:8px 10px;border-radius:10px;background:#101010;color:#ffb3b3;font-size:12px;text-align:center}.audience-launch{grid-column:1/-1;background:#0c78b8!important}.audience-connected{color:#9ee8b0!important}#mcQuestionView{display:none;width:100%;height:100%;align-items:center;justify-content:center;padding:18px}#mcQuestionView.show{display:flex}.mc-question-card{width:min(1180px,100%);max-height:100%;overflow:auto;background:#171717;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:20px}.mc-question-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}.mc-question-heading h2{font-size:clamp(26px,3vw,46px);margin:4px 0}.eyebrow{font-size:12px;letter-spacing:.15em;color:rgba(255,255,255,.55);font-weight:800}.generator-grid{display:grid;grid-template-columns:minmax(250px,1fr) minmax(300px,1.2fr) minmax(240px,.8fr);gap:16px}.preview-card,.answer-card,.mc-timer-card{background:#232323;border-radius:18px;padding:16px;min-height:320px}.preview-card{display:grid;place-items:center;position:relative}.preview-card img{max-width:100%;max-height:300px;border-radius:14px;background:white;display:none}.preview-card img.show{display:block}#previewPlaceholder{color:rgba(255,255,255,.45);font-size:22px;font-weight:800;text-align:center}#itemNumber{font-size:clamp(70px,9vw,130px);font-weight:900;line-height:1;margin-top:12px}#itemName{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.05;min-height:110px}#remainingItems{color:rgba(255,255,255,.65);margin:14px 0}.generator-buttons,.mc-timer-buttons{display:grid;gap:9px}.generator-buttons{grid-template-columns:1fr 1fr}.generator-buttons button,.mc-timer-buttons button,.mc-secondary,.mc-primary,.mc-danger{border:0;border-radius:11px;padding:12px;color:white;font-weight:900;cursor:pointer}.mc-primary{background:#159447}.mc-secondary{background:#444}.mc-danger{background:#8f2424}.generator-buttons button:disabled{opacity:.35;cursor:default}.mc-timer-card{text-align:center}#mcTimerDisplay{font-size:clamp(68px,8vw,115px);font-weight:900;font-variant-numeric:tabular-nums;margin:22px 0}.mc-timer-card p{font-size:13px;color:rgba(255,255,255,.55)}body.audience-mode #sidebar{display:none}body.audience-mode #app{grid-template-columns:1fr}body.audience-mode #main{padding:0}body.audience-mode #board{width:min(100%,calc(100vh*2048/1860));max-height:100vh}body.audience-mode #questionView{grid-template-columns:1fr minmax(240px,22vw)}body.audience-mode #closeTimerButton{display:none}body.audience-mode #timerButtons button{pointer-events:none}body.audience-mode #timerHint{display:none}@media(max-width:900px){.generator-grid{grid-template-columns:1fr 1fr}.mc-timer-card{grid-column:1/-1;min-height:auto}.preview-card,.answer-card{min-height:280px}}@media(max-width:620px){.generator-grid{grid-template-columns:1fr}.mc-timer-card{grid-column:auto}.generator-buttons{grid-template-columns:1fr}.mc-question-heading{align-items:flex-start}.mc-question-card{padding:12px}}
+
+/* v3.1: scores on both screens and readable MC timer controls */
+.shared-scorebar{display:none;gap:10px;align-items:stretch;z-index:30}
+.shared-score-item{min-width:0;background:rgba(18,18,18,.94);border:2px solid rgba(255,255,255,.2);border-radius:13px;padding:8px 12px;text-align:center;box-shadow:0 5px 18px rgba(0,0,0,.35)}
+.shared-score-name{font-size:clamp(12px,1.25vw,18px);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.shared-score-value{font-size:clamp(24px,3vw,44px);font-weight:900;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}
+#audienceScoreBar{position:absolute;left:12px;right:12px;top:10px;grid-template-columns:repeat(4,minmax(0,1fr));pointer-events:none}
+body.audience-mode #audienceScoreBar{display:grid}
+body.audience-mode #board{max-height:calc(100vh - 94px);margin-top:84px}
+body.audience-mode #questionView{inset:92px 10px 10px}
+#mcScoreBar{grid-template-columns:repeat(4,minmax(105px,1fr));margin:0 0 16px}
+#mcQuestionView.show #mcScoreBar{display:grid}
+.mc-timer-card{color:#fff!important}
+#mcTimerDisplay{color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.55)}
+#mcPauseButton{background:#159447!important;color:#fff!important}
+#mcResetTimerButton{background:#555!important;color:#fff!important}
+#mcAnswerTimerButton{background:#f0a33a!important;color:#111!important}
+.mc-timer-card p{color:rgba(255,255,255,.82)!important;background:#151515;border-radius:9px;padding:9px 10px;line-height:1.35}
+.custom-timer-controls{margin-top:12px;padding:11px;background:#151515;border-radius:10px}.custom-timer-label{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-bottom:7px}.custom-timer-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:7px;align-items:center}.custom-timer-row input{width:100%;min-width:0;box-sizing:border-box;border:1px solid rgba(255,255,255,.22);border-radius:8px;background:#fff;color:#111;padding:8px 6px;text-align:center;font-size:16px;font-weight:800}.custom-timer-row span{font-size:20px;font-weight:900}.custom-timer-row button{border:0;border-radius:8px;background:#7e2173;color:#fff;padding:9px 12px;font-weight:800;cursor:pointer}.custom-timer-help{margin-top:6px;font-size:11px;opacity:.65}
+@media(max-height:650px){
+ body.audience-mode #board{max-height:calc(100vh - 72px);margin-top:66px}
+ body.audience-mode #questionView{inset:72px 7px 7px}
+ #audienceScoreBar{top:6px;left:7px;right:7px;gap:6px}
+ .shared-score-item{padding:4px 7px;border-radius:9px}
+ .shared-score-value{font-size:clamp(20px,5vh,32px)}
+}
+
+/* v3.2: tighter audience crop, smaller public timer, reveal view */
+body.audience-mode #questionView{grid-template-columns:minmax(0,1fr) clamp(170px,16vw,245px);gap:8px}
+body.audience-mode #timerPanel{padding:10px 8px;border-radius:15px}
+body.audience-mode #selectedTile{font-size:clamp(15px,1.55vw,22px)}
+body.audience-mode #levelLabel{font-size:11px}
+body.audience-mode #timerDisplay{font-size:clamp(52px,6.7vw,92px);margin:10px 0}
+body.audience-mode #timerButtons{gap:6px}
+body.audience-mode #timerButtons button{padding:8px 5px;font-size:clamp(12px,1vw,15px)}
+#questionImageWrap{padding:0}
+#questionImage{object-fit:contain;transform:scale(1.01);transform-origin:center}
+.preview-card{overflow:hidden}
+.preview-card img{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;padding:4px}
+#showAudienceBtn{grid-column:1/-1;background:#6f42c1;color:#fff}
+#showAudienceBtn.revealed{background:#b76500}
+#revealView{display:none;position:absolute;inset:0;z-index:25;background:radial-gradient(circle at center,#3b1974 0,#160825 65%,#08030d 100%);place-items:center;padding:3vh 4vw;text-align:center;overflow:hidden}
+#revealView.show{display:grid;animation:revealFade .32s ease-out}
+#revealCard{width:min(900px,90vw);height:min(690px,72vh);display:grid;grid-template-rows:minmax(0,1fr) auto auto;gap:8px;place-items:center;background:rgba(255,255,255,.98);color:#141414;border-radius:30px;padding:22px;box-shadow:0 28px 90px rgba(0,0,0,.55);animation:revealPop .48s cubic-bezier(.2,.9,.25,1.2)}
+#revealImageWrap{width:100%;height:100%;min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:20px}
+#revealImage{display:block;width:100%;height:100%;object-fit:contain}
+#revealName{font-size:clamp(38px,6vw,82px);line-height:1;font-weight:1000;text-transform:uppercase}
+#revealNumber{font-size:clamp(20px,2.5vw,34px);font-weight:900;color:#6f42c1}
+@keyframes revealFade{from{opacity:0}to{opacity:1}}
+@keyframes revealPop{from{opacity:0;transform:scale(.72) rotate(-1deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@media(max-height:650px){#revealCard{height:70vh;padding:12px}#revealName{font-size:clamp(30px,7vh,58px)}}
+
+/* v3.2.2: extra bottom room for Places and word-anchored item crops */
+.preview-card img{width:92%;height:82%;object-fit:contain;padding:0;background:#fff;border-radius:14px}
+#revealImage{width:94%;height:94%;object-fit:contain}
+
+/* v3.2.4: uncropped Places charts, wider chart margins, image-first 65:56 preview */
+.preview-card img{
+  width:min(100%,520px)!important;
+  height:auto!important;
+  aspect-ratio:65/56!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  max-height:none!important;
+}
+
+/* v3.2.5: wider charts and per-item preview positioning */
+.preview-card{grid-template-rows:minmax(0,1fr) auto;gap:10px;align-items:stretch}
+#itemPreview{justify-self:center;align-self:center}
+#previewAdjustments{display:none;width:100%;grid-template-columns:repeat(5,1fr);gap:6px;align-items:center}
+#previewAdjustments.show{display:grid}
+#previewAdjustments button{border:0;border-radius:8px;background:#3a3a3a;color:#fff;font-weight:900;padding:8px 4px;cursor:pointer}
+#previewAdjustments button:hover{background:#505050}
+#previewAdjustments .wide{grid-column:span 2}
+#previewAdjustments .reset{background:#6a3d18}
+#previewAdjustmentsLabel{grid-column:1/-1;text-align:center;color:rgba(255,255,255,.62);font-size:12px;font-weight:700}
+
+/* v3.8: all categories use embedded individual PNG artwork for MC preview and audience reveal. */
+
+/* v3.8 final cleanup and celebration */
+#showAudienceBtn{grid-column:auto}
+#soundToggleBtn{background:#252525;color:#fff}
+#soundToggleBtn.muted{background:#5a2020;color:#ffd6d6}
+#revealImageWrap{padding:10px;background:#fff}
+#revealImage{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important;padding:0!important}
+#timerDisplay.warning,#mcTimerDisplay.warning{animation:warningPulse .55s ease-in-out infinite alternate;color:#ffd04a;text-shadow:0 0 18px rgba(255,208,74,.5)}
+@keyframes warningPulse{to{transform:scale(1.075)}}
+#celebrationLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:30}
+#revealCard{position:relative;z-index:31}
+.celebration-particle{position:absolute;left:50%;top:48%;width:10px;height:10px;border-radius:50%;background:hsl(var(--h),95%,60%);box-shadow:0 0 12px hsl(var(--h),95%,65%);animation:fireworkBurst var(--d) cubic-bezier(.12,.66,.18,1) forwards;animation-delay:var(--delay)}
+.celebration-confetti{position:absolute;top:-6vh;left:var(--x);width:9px;height:18px;background:hsl(var(--h),90%,58%);transform:rotate(var(--r));animation:confettiFall var(--d) ease-in forwards;animation-delay:var(--delay)}
+@keyframes fireworkBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(.75)}}
+@keyframes confettiFall{0%{opacity:0;transform:translateY(-5vh) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translateY(112vh) rotate(760deg)}}
+@media(prefers-reduced-motion:reduce){.celebration-particle,.celebration-confetti{display:none!important}#revealCard,#revealView.show{animation:none!important}}
+
+/* v3.11 Practice: optional audience hints */
+.preview-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;overflow:auto}
+.preview-card img{flex:0 0 auto;margin-top:0}
+#previewPlaceholder{margin:auto}
+#mcHints{width:100%;margin-top:2px;text-align:left;color:#fff;font-size:13px;line-height:1.35;display:none}
+#mcHints.show{display:block}
+#mcHintsTitle{font-size:10px;letter-spacing:.14em;color:rgba(255,255,255,.5);font-weight:900;margin-bottom:5px}
+#mcHints ol{margin:0;padding-left:20px}
+#mcHints li{margin:3px 0}
+#revealHintBtn{background:#0c78b8;color:#fff}
+#revealHintBtn:disabled{opacity:.35;cursor:default}
+#hintView{display:none;position:absolute;inset:0;z-index:24;place-items:center;padding:3vh 4vw;text-align:center;overflow:hidden}
+#hintView.show{display:grid}
+#hintCard{width:min(900px,90vw);min-height:min(360px,48vh);display:flex;flex-direction:column;justify-content:center;gap:20px;background:#fff;color:#141414;border-radius:30px;padding:38px 46px;box-shadow:0 28px 90px rgba(0,0,0,.45)}
+#hintLines{font-size:clamp(25px,3vw,48px);font-weight:800;line-height:1.25}
+#hintLines div+div{margin-top:22px}
+body.audience-mode #hintCard{width:min(980px,88vw)}
+
+/* v3.14 mode selection and classroom mode */
+#modeChooser{position:fixed;inset:0;z-index:10000;background:radial-gradient(circle at top,#5b1858 0,#27102f 38%,#0e0d11 76%);display:grid;place-items:center;padding:24px}
+#modeChooser[hidden]{display:none}.mode-card{width:min(940px,96vw);background:linear-gradient(180deg,rgba(58,20,60,.97),rgba(21,17,25,.98));border:2px solid rgba(244,157,218,.42);border-radius:30px;padding:clamp(22px,3.5vw,42px);box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 38px rgba(207,0,110,.15);text-align:center}.mode-brand{display:flex;flex-direction:column;align-items:center;margin-bottom:10px}.mode-logo{width:min(390px,72vw);height:auto;display:block;filter:drop-shadow(0 10px 20px rgba(0,0,0,.3))}.mode-title{margin:-2px 0 8px;font-size:clamp(28px,4vw,48px);font-weight:1000;letter-spacing:.055em;color:#fff;text-shadow:0 3px 0 #7e2173,0 0 18px rgba(244,157,218,.28)}.mode-card>p{color:#f2d9eb;margin:0 0 26px;font-size:clamp(16px,2vw,20px)}.mode-options{display:grid;grid-template-columns:1fr 1fr;gap:18px}.mode-option{border:2px solid rgba(255,255,255,.2);border-radius:22px;background:linear-gradient(180deg,rgba(126,33,115,.58),rgba(54,23,62,.72));color:#fff;padding:24px 20px;cursor:pointer;text-align:center;transition:.18s;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.mode-option:hover{transform:translateY(-3px);border-color:#f49fda;background:linear-gradient(180deg,rgba(207,0,110,.72),rgba(76,27,83,.86));box-shadow:0 12px 28px rgba(0,0,0,.28)}.mode-icon{min-height:66px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}.tv-icon{position:relative;display:inline-block;width:76px;height:50px;border:4px solid #fff;border-radius:7px;background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.08)}.tv-icon:before{content:'';position:absolute;left:50%;bottom:-12px;width:4px;height:10px;background:#fff;transform:translateX(-50%)}.tv-icon:after{content:'';position:absolute;left:50%;bottom:-15px;width:34px;height:4px;border-radius:4px;background:#fff;transform:translateX(-50%)}.mode-option strong{font-size:25px;display:block;margin-bottom:7px}.mode-option small{font-size:15px;line-height:1.45;color:#f0e6ef;display:block}.mode-recommended{display:inline-block;margin-top:13px;background:#cf006e;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 11px;font-weight:900;font-size:12px;letter-spacing:.04em}.mode-back{grid-column:1/-1;background:transparent!important;border:1px solid rgba(255,255,255,.2)!important}@media(max-width:680px){.mode-options{grid-template-columns:1fr}.mode-logo{width:min(310px,78vw)}.tv-icon{width:64px;height:43px}}
+.classroom-mode #openAudienceBtn,.classroom-mode #audienceStatus{display:none}.classroom-mode #sidebar h1:after{content:' · Classroom Mode';font-size:13px;color:#bbb;font-weight:400}.classroom-mode #audienceScoreBar{display:grid}.classroom-mode #main{padding-top:76px}.classroom-mode #board{max-height:calc(100vh - 92px);width:min(100%,calc((100vh - 92px)*2048/1860))}.classroom-mode #questionView{top:76px}.classroom-mode #controls{margin-top:8px}.classroom-mode #changeModeBtn{display:block}.event-mode #changeModeBtn{display:block}#changeModeBtn{display:none}
+@media(max-width:760px){.mode-options{grid-template-columns:1fr}.mode-card{padding:22px}.mode-option{padding:18px}.mode-icon{font-size:34px}}
+</style>
+<style id="v3-10-1-audience-image-fit">
+/* v3.10.1.1: guaranteed full-image audience reveal with visible breathing room */
+#revealImageWrap{
+  position:relative!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:0!important;
+  background:#fff!important;
+}
+#revealImage{
+  position:absolute!important;
+  inset:7%!important;
+  width:86%!important;
+  height:86%!important;
+  max-width:86%!important;
+  max-height:86%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  margin:0!important;
+  padding:0!important;
+}
+@media(max-height:650px){
+  #revealImage{inset:5%!important;width:90%!important;height:90%!important;max-width:90%!important;max-height:90%!important}
+}
+</style>
+
+<style id="v3-17-requested-updates">
+.mode-event-details{margin:4px 0 6px;color:#fff;font-size:clamp(15px,1.8vw,19px);font-weight:800}
+.mode-learn-more{display:inline-block;color:#f49fda;font-weight:800;text-decoration:underline;text-underline-offset:3px;margin-bottom:8px}
+.mode-developer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-top:22px;color:#f2d9eb;font-size:14px;font-weight:700;text-align:center}
+.mode-developer img{width:min(220px,34vw);height:44px;object-fit:contain;object-position:center}
+.classroom-custom-timer{margin-top:14px}
+#questionImage{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important}
+</style>
+</head><body><div id="modeChooser" hidden><div class="mode-card"><div class="mode-brand"><img class="mode-logo" src="assets/002-7af61605bdf3.png" alt="Express Yourself Expo"><div class="mode-title">Q&amp;A GAME SHOW</div><div class="mode-event-details">Sunday, November 15 • Nagoya International School</div><a class="mode-learn-more" href="https://intogether.jp/eye-expo" target="_blank" rel="noopener noreferrer">Learn More About EYE</a></div><p>How will you use the Game Show today?</p><div class="mode-options"><button class="mode-option" id="eventModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span><span class="tv-icon"></span></span><strong>Two Displays</strong><small>Use the MC controls on your computer and show the Game Board on a TV or projector.</small><span class="mode-recommended">FULL EVENT MODE</span></button><button class="mode-option" id="classroomModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span></span><strong>One Display</strong><small>Use the Game Board, timer, PDFs, and score controls together on one screen.</small><span class="mode-recommended">CLASSROOM MODE</span></button></div><div class="mode-developer"><span>Developed by</span><img src="assets/003-51a1b6c0f0ed.png" alt="InTogether"></div></div></div>
 <div id="rotateNotice">
   📱<br/><br/>Please rotate your phone sideways to use the Game Show board.
 </div>
@@ -62,4 +465,101 @@
 </aside>
 </div>
 </div>
-</section></main></div><div id="toast"></div><script src="js/app.js"></script></body></html>
+</section></main></div><div id="toast"></div><script>(()=>{
+const PRACTICE_HINT_DB={"Animals":{"1":["People often keep it as a pet.","It has four legs and a tail.","It can learn many commands."],"2":["People often keep it as a pet.","It has soft fur and whiskers.","It can climb and jump well."],"3":["It is a small animal.","It has long ears.","It has strong back legs."],"4":["It lives in water.","It has fins.","It usually has scales."],"5":["It has feathers.","It has two wings.","It has a beak."],"6":["It is a very small mammal.","It has a long tail.","It has small round ears."],"7":["It is a large animal.","It has four long legs.","People can ride it."],"8":["It is a large farm animal.","It has four legs.","It eats grass."],"9":["It is a farm animal.","It has a round body.","It has a short curly tail."],"10":["It is a farm animal.","It has thick wool.","It eats grass."],"11":["It is a farm animal.","It has feathers and two legs.","It lays eggs."],"12":["It is a bird.","It likes water.","It has a flat bill."],"13":["It is a wild cat.","It has black spots.","It is the fastest land animal."],"14":["It is a small animal.","It can jump.","It begins life in water."],"15":["It is a very large animal.","It has big ears.","It has a long trunk."],"16":["It is a wild cat.","The male has a mane.","It has a very loud roar."],"17":["It is a wild cat.","It has orange fur with black stripes.","It is the largest wild cat."],"18":["It is a mammal.","It can climb trees.","Many kinds have long tails."],"19":["It is a large mammal.","It has thick fur.","Some kinds sleep through winter."],"20":["It is a bird.","It cannot fly.","It swims very well."],"21":["It lives in the ocean.","It is very intelligent.","It often jumps out of the water."],"22":["It is a mammal.","It can fly.","It is active mostly at night."],"23":["It lives in Australia.","It moves by hopping.","A mother carries her baby in a pouch."],"24":["It lives in Africa.","It looks like a horse.","It has black and white stripes."],"25":["It is black and white.","It lives in China.","It eats a lot of bamboo."],"26":["It lives in Australia.","It spends much time in trees.","It eats eucalyptus leaves."],"27":["It lives in the ocean.","It is a fish.","It has many sharp teeth."],"28":["It lives in the ocean.","It has eight arms.","It can squirt ink."],"29":["It has no legs.","It moves by sliding.","It has a long body."],"30":["It lives in jungles and forests.","It has very strong arms.","It mostly eats plants."],"31":["It lives in forests and fields.","The male often has antlers.","It can run very fast."],"32":["It is a colorful bird.","It has a curved beak.","Some can copy human speech."],"33":["It is a large bird.","It has excellent eyesight.","It catches fish and small animals."],"34":["It is a bird.","It is active at night.","It can turn its head very far."],"35":["It is a bird.","The male has a colorful tail.","It spreads its feathers like a fan."],"36":["It is a very large animal.","It has thick gray skin.","It has one or two horns."],"37":["It is a reptile.","It lives in trees.","It can change color."],"38":["It lives in the desert.","It has one or two humps.","It can travel a long time without water."],"39":["It is a very large animal.","It spends a lot of time in the water.","It has a huge mouth."],"40":["It lives in the ocean.","It has two large claws.","It has a hard shell."],"41":["It is a sea mammal.","It has flippers.","It often rests on rocks or ice."],"42":["It lives in the ocean.","Its body is soft and almost clear.","It has long tentacles."],"43":["It is a very tall animal.","It has brown spots.","It has a very long neck."],"44":["It is a bird.","It has long legs and a long neck.","It is famous for pink feathers."],"45":["It is a small mammal.","Its back has sharp spines.","It rolls into a ball when scared."],"46":["It is a mammal.","It has a black mask around its eyes.","It has a striped tail."],"47":["It is a mammal.","It often lives in grasslands.","It has long legs and horns."],"48":["It lives in the ocean.","It has a wide flat body.","It swims with large fins."],"49":["It is a small mammal.","It lives in groups.","It often stands on its back legs."],"50":["It is a mammal.","It has hard armor.","Some kinds can roll into a ball."],"51":["It is a mammal.","It swims very well.","It often floats on its back."],"52":["It is a small mammal.","It climbs trees.","It has a bushy tail."],"53":["It is a reptile.","It has a hard shell.","It can pull its head inside."],"54":["It is a wild cat.","It has dark spots shaped like rings.","It lives in Central and South America."],"55":["It is a mammal.","It has a long neck and soft wool.","It is related to the llama."],"56":["It is a reptile.","It has a long tail and sharp claws.","It likes to sit in the sun."],"57":["It is a reptile.","It is the world's largest lizard.","It lives on Indonesian islands."],"58":["It lives in the ocean.","It is black and white.","It is the largest dolphin."],"59":["It is a large sea mammal.","It has long tusks.","It lives in cold places."],"60":["It is a bird.","It lives in forests.","It pecks tree trunks."]},"Food":{"1":["Many people eat it for lunch or dinner.","It is baked in an oven.","It usually has cheese."],"2":["Many people eat it at restaurants.","It is usually served on a bun.","It often has meat and cheese."],"3":["It is a fruit.","It grows on trees.","It can be red, green, or yellow."],"4":["It is a fruit.","It has a yellow peel.","Monkeys are famous for eating it."],"5":["It is a fruit.","It grows on trees.","It has a thick peel."],"6":["It is a cold dessert.","It melts in warm weather.","It comes in many flavors."],"7":["People often eat it for lunch.","It has bread.","It usually has something inside."],"8":["It is popular at sports games.","It is served in a long bun.","It usually has a sausage."],"9":["It is a dessert.","People often eat it at parties.","It is baked in an oven."],"10":["It is a sweet snack.","It is baked in an oven.","It is usually small and round."],"11":["Many people eat it every day.","It is small and white after cooking.","People often eat it with chopsticks."],"12":["They are fruit.","They are small and blue.","People often put them in muffins."],"13":["It is a fruit.","It is brown outside.","It is green inside with black seeds."],"14":["It is a snack.","It is made from corn.","People often eat it at movies."],"15":["People often eat them for breakfast.","They are round and flat.","People often add syrup."],"16":["It is a popular meal.","It has rice and sauce.","It often includes potatoes and carrots."],"17":["They are a side dish.","They are made from potatoes.","People often eat them with ketchup."],"18":["It is a sweet food.","It is often round.","Many have a hole in the middle."],"19":["It is often healthy.","It contains vegetables.","People often eat it before a main meal."],"20":["It is a Japanese food.","It is made with rice.","Some kinds have raw fish."],"21":["It is a fruit.","It is usually red.","Its seeds are on the outside."],"22":["They are fruit.","They grow in bunches.","They can be purple or green."],"23":["It is a fruit.","It is green outside and red inside.","It is very large and watery."],"24":["It is a drink.","It is white.","Many people drink it at breakfast."],"25":["It is a drink.","It is made from fruit or vegetables.","People often drink it cold."],"26":["It comes from a chicken.","It has a shell.","People often eat it for breakfast."],"27":["It is meat.","It comes from a bird.","People fry, roast, or grill it."],"28":["It is meat.","It is long and round.","People often grill or fry it."],"29":["It is sweet.","It comes from cacao beans.","Many people eat it as candy."],"30":["It is made from milk.","It is often yellow or white.","People put it on pizza."],"31":["It is a kind of pasta.","It is long and thin.","People often eat it with tomato sauce."],"32":["It is wrapped in a tortilla.","It can contain rice, beans, or meat.","People often eat it with their hands."],"33":["It is made from eggs.","It is cooked in a frying pan.","It can contain cheese or vegetables."],"34":["It is baked in an oven.","It is made from flour.","People use it for sandwiches."],"35":["It is a fruit.","It looks like a large orange.","It tastes sweet and sour."],"36":["It is a fruit.","It is green inside.","It is used to make guacamole."],"37":["It is a vegetable.","It has a hard outside.","People often eat it in autumn."],"38":["They are long and thin.","People often eat them in soup.","They are common in many Asian countries."],"39":["They are Mexican food.","They use a folded tortilla.","They can contain meat, cheese, or vegetables."],"40":["It is a breakfast food.","It is cooked in a special maker.","It has small square holes."],"41":["It is made from milk.","People eat it with a spoon.","It can have fruit mixed in."],"42":["People often eat it for breakfast.","It is usually eaten with milk.","It comes in many shapes."],"43":["It is usually served in a bowl.","It can be hot or cold.","It is made with liquid and ingredients."],"44":["They are made from meat.","They are round.","People often eat them with sauce."],"45":["It is a tropical fruit.","It is yellow or orange inside.","It has one large seed."],"46":["It is covered with breadcrumbs.","It is fried until crisp.","It often has potato inside."],"47":["They are wrapped in thin dough.","They can be boiled, steamed, or fried.","They often contain meat or vegetables."],"48":["They are made with tortilla chips.","They often have melted cheese.","People add beans, meat, or salsa."],"49":["It is a kind of pasta.","It has many layers.","It is baked in an oven."],"50":["It grows on a palm tree.","It has a hard shell.","There is water inside."],"51":["It is a baked food.","It is shaped like a crescent.","It has many flaky layers."],"52":["It is a vegetable.","It has many thick leaves.","People eat the soft heart inside."],"53":["It is a vegetable.","It is usually purple.","It has smooth shiny skin."],"54":["It is a green vegetable.","It is long and smooth.","It looks like a cucumber."],"55":["It is a fruit.","It is red outside.","It has many small seeds inside."],"56":["It is meat.","It is usually thick and flat.","People grill or fry it."],"57":["It is baked dough.","It has a twisted shape.","It is often salty."],"58":["It is a small baked food.","It is cooked in a paper cup.","It can contain fruit or chocolate."],"59":["It is a round bread.","It has a hole in the middle.","It is boiled before baking."],"60":["It is a leafy vegetable.","It is dark green.","People eat it raw or cooked."]},"Things":{"1":["Students use it at school.","It is made for writing.","It has a point."],"2":["People use it for writing.","It uses ink.","Many students carry one."],"3":["Students use it at school.","It is small.","It helps fix mistakes."],"4":["Students use it at school.","It has many pages.","People write in it."],"5":["People read it.","It has many pages.","It has a cover."],"6":["Students use it at school.","It is long and straight.","It helps measure things."],"7":["People use them at school.","They have two blades.","They open and close."],"8":["Students carry it.","It goes on your back.","It has two shoulder straps."],"9":["Children use it for art.","It adds color to paper.","It is made of wax."],"10":["People use it for writing.","It has colored ink.","It makes thick lines."],"11":["Students use it at school.","It sticks paper together.","You twist the bottom to use more."],"12":["It is furniture.","People work or study at it.","Students use one in class."],"13":["It is furniture.","You sit on it.","It often has four legs."],"14":["It is furniture.","People put things on it.","Families often eat meals there."],"15":["It has numbers.","Its hands move around a face.","It tells time."],"16":["People drink from it.","It holds water or juice.","It is smaller than a bottle."],"17":["It is a toy.","It looks like a person.","Children often play with it."],"18":["It is round.","People use it in sports.","You can throw, kick, or catch it."],"19":["It is a stuffed toy.","It looks like a bear.","Many children sleep with one."],"20":["It is a game.","You put pieces together.","It makes one picture when finished."],"21":["It has two wheels.","You push pedals with your feet.","It travels without gasoline."],"22":["You wear it on your head.","It has a hard outside.","It helps protect you from injury."],"23":["You hold it above your head.","It opens and closes.","People use it in rain."],"24":["It is clothing.","It has short sleeves.","People wear it in warm weather."],"25":["You wear it on your head.","It can block sun or rain.","It comes in many styles."],"26":["You wear them on your feet.","They protect your feet.","They usually come in pairs."],"27":["It is clothing.","You wear it over a shirt.","It helps keep you warm."],"28":["You wear it on your wrist.","It has numbers or a screen.","It tells the time."],"29":["It is used for talking to people.","It has buttons and a receiver.","It rang when someone wanted to talk to you."],"30":["It is a small machine.","It has a lens.","People use it to take photos."],"31":["It is an electronic machine.","It has a screen and keyboard.","People use it to work and study."],"32":["It has many buttons.","People press them with fingers.","It is used to type."],"33":["You wear them on your head.","They cover your ears.","They let you listen quietly."],"34":["You hold it in your hand.","It uses batteries.","It helps you see in darkness."],"35":["People take it on trips.","It has a handle.","It carries clothes."],"36":["It is a small electronic machine.","It has number buttons.","It solves math problems."],"37":["It has a large screen.","People watch shows on it.","It can show sports and news."],"38":["They are made of rubber.","They stretch and return.","They hold things together."],"39":["It has four wheels.","You stand on it.","People ride it and do tricks."],"40":["You use it when eating.","It has a handle and points.","It picks up food."],"41":["It is flat and round.","People put food on it.","It is used at meals."],"42":["It is a cleaning machine.","It sucks up dust.","People use it on floors."],"43":["It is a flat electronic device.","It has a touch screen.","People use apps on it."],"44":["It has many buttons.","You point it at a machine.","It changes channels or settings."],"45":["It is a container.","Soft paper comes out from the top.","People use it for their nose."],"46":["It is a small tool.","It has a moving needle.","It helps find north."],"47":["It is a viewing tool.","It makes far things look bigger.","People use it for stars."],"48":["It is a flying machine.","It has spinning propellers.","People control it remotely."],"49":["It is an electronic machine.","It uses paper and ink.","It makes copies of documents."],"50":["You hold them with both hands.","You look through two eyepieces.","They make far things look closer."],"51":["It is a container.","People keep tools inside.","Workers carry it to fix things."],"52":["It is round.","It is made of rubber.","Cars and bicycles roll on it."],"53":["It is a small electronic device.","It fits in a pocket.","It stores and moves digital files."],"54":["It is entertainment.","People use a controller.","You play it on a screen."],"55":["People hold it near their mouth.","It changes sound into a signal.","Singers and speakers use it."],"56":["It is a living thing.","It has leaves and needs water.","People grow it indoors or outside."],"57":["They are made of cloth.","They hang by windows.","They control light in a room."],"58":["It is a small electronic device.","It has a touch screen.","People call, text, and use apps."],"59":["It is soft.","People put it under their head.","It is used for sleeping."],"60":["It is an electric appliance.","Its blades spin.","It moves air to cool people."]},"People":{"1":["This person often works at a school.","This person helps people learn.","This person may use books and a board."],"2":["This person often works at a hospital or clinic.","This person helps sick or hurt people.","This person may use a stethoscope."],"3":["This person often works at a hospital.","This person cares for sick or hurt people.","This person may check your temperature."],"4":["This person often works in a restaurant kitchen.","This person prepares food for other people.","This person uses knives, pans, and ovens."],"5":["This person usually works outdoors.","This person grows food or cares for animals.","This person may use a tractor."],"6":["This person works in towns and cities.","This person helps keep people safe.","This person usually wears a uniform."],"7":["This person works at a fire station.","This person helps people in dangerous situations.","This person wears special protective clothes."],"8":["This person works inside an airplane.","This person takes people or goods through the sky.","This person uses many controls and screens."],"9":["This person works on roads.","This person takes many people from place to place.","This person uses a steering wheel and mirrors."],"10":["This person may work on a stage or in a studio.","This person entertains people with music.","This person often uses a microphone."],"11":["This person works with books.","They organize and care for many books.","They help people find information."],"12":["This person makes art.","They may use paint or clay.","They create pictures or sculptures."],"13":["This person makes music.","They may play an instrument.","They perform for people."],"14":["This person makes food.","They use an oven.","They bake bread and cakes."],"15":["This person helps people stay healthy.","They look inside your mouth.","They care for your teeth."],"16":["This person helps people improve.","They often work with a team.","They teach sports skills."],"17":["This person plays a sport.","They kick a ball.","They try to score goals."],"18":["This person works with animals.","They work at a zoo.","They feed and care for animals."],"19":["I'm a video game character.","I wear a red hat.","I jump on enemies."],"20":["I'm a video game character.","I wear green.","Mario is my brother."],"21":["I'm a yellow animal.","I use electricity.","I say my own name."],"22":["I'm a blue robot cat.","I came from the future.","I help Nobita."],"23":["I'm a superhero.","My head is bread.","I help people who are hungry."],"24":["I'm a white cat.","I wear a bow.","I don't have a mouth."],"25":["I'm a famous cartoon character.","I have big round ears.","I am Disney's mascot."],"26":["I'm a famous cartoon character.","I wear a bow.","Mickey Mouse is my boyfriend."],"27":["I'm a blue animal.","I run very fast.","I collect rings."],"28":["I'm a young mystery solver.","I solve difficult cases.","I wear glasses."],"29":["I'm a blue alien.","I came from space.","Lilo is my friend."],"30":["I'm a big furry character.","I live in the forest.","I carry an umbrella in the rain."],"31":["This person works near water.","They use nets or fishing rods.","They catch fish for food."],"32":["This person works in a store.","They scan products.","They accept payments."],"33":["This person drives for work.","They carry passengers.","People pay for each trip."],"34":["This person solves mysteries.","They look for clues.","They try to discover what happened."],"35":["This person builds things.","They work with wood.","They make furniture or houses."],"36":["This person works with animals.","They help sick animals.","People bring pets to them."],"37":["This person works with plants.","They plant flowers or trees.","They keep gardens healthy."],"38":["This person works in a restaurant.","They bring food and drinks.","They take customers' orders."],"39":["This person performs for an audience.","They tell jokes.","They try to make people laugh."],"40":["This person plays a sport.","They use a bat and glove.","They try to score runs."],"41":["I'm a baseball player.","I'm from Japan.","I can both pitch and hit."],"42":["This person lived a long time ago.","He created animated stories.","He started a famous entertainment company."],"43":["This person lived a long time ago.","He was a scientist.","He is famous for relativity."],"44":["This person lived a long time ago.","He wrote music as a child.","He was a famous Austrian composer."],"45":["This person lived a long time ago.","He became a powerful shogun.","He began a government that ruled Japan for over 250 years."],"46":["This person has a special job.","They travel in spacecraft.","They work in space."],"47":["This person studies the world.","They do experiments.","They discover new things."],"48":["This person solves problems.","They design and build things.","They create machines or bridges."],"49":["This person is a teacher.","They work at a university.","They teach adults and do research."],"50":["This person fixes machines.","They use many tools.","They repair vehicles."],"51":["This person takes pictures.","They use a camera.","They capture special moments."],"52":["This person works with hair.","They use scissors and clippers.","They cut people's hair."],"53":["This person delivers things.","They carry letters and packages.","They bring letters and packages to homes."],"54":["This person performs for an audience.","They do surprising tricks.","They make people wonder how."],"55":["This person drives for work.","They carry goods.","They drive a large vehicle."],"56":["I was a businessman.","I helped start Apple.","I helped make the iPhone."],"57":["This person lived a long time ago.","He was an artist and inventor.","He painted the Mona Lisa."],"58":["This person lived a long time ago.","He wrote plays and poems.","He is a famous English writer."],"59":["This person lived a long time ago.","He wrote famous music.","He composed after losing hearing."],"60":["This person lived a long time ago.","He was an artist.","He created The Great Wave."]},"Places":{"1":["It is an outdoor place.","People go there to relax or play.","It often has grass and trees."],"2":["It is a place where people learn.","Students go there on weekdays.","Teachers work there."],"3":["It is a quiet place.","People go there to read.","You can borrow books there."],"4":["People visit this place for fun.","Many animals live there.","Visitors can learn about wildlife."],"5":["It is beside the sea.","People like to visit it in summer.","It has sand."],"6":["People go there when they are sick.","Doctors and nurses work there.","It is open day and night."],"7":["People go there to eat.","Chefs work there.","You can order food."],"8":["It is a place for travel.","Airplanes arrive and leave there.","Travelers carry luggage."],"9":["People shop there.","You can buy food there.","It has shopping carts."],"10":["People go there for entertainment.","It has a very big screen.","Movies are shown there."],"11":["People go there to learn.","It displays old or interesting things.","You may see fossils there."],"12":["It is a famous place in Japan.","It is Japan's tallest mountain.","It is a volcano."],"13":["It was built long ago.","Kings or lords lived there.","It has strong walls and towers."],"14":["People travel from there.","Trains stop there.","You can buy tickets there."],"15":["People wait there.","Buses stop there.","It usually has a sign."],"16":["Children play there.","It often has swings and slides.","People climb and run there."],"17":["People exercise there.","Many sports happen there.","Schools often have one."],"18":["It is a room in a home.","People sleep there.","It usually has a bed."],"19":["Students learn there.","Teachers work there.","It has desks and a board."],"20":["It is a room in a home.","People cook there.","It has a stove and sink."],"21":["It is a room in a building.","People wash there.","It usually has a toilet and sink."],"22":["It is a room in a home.","People relax there.","It often has a sofa and TV."],"23":["It is outdoors.","People grow plants there.","It is often next to a house."],"24":["It is a workplace.","People use desks and computers.","Companies often have one."],"25":["It is a public building.","People send letters there.","It handles packages and mail."],"26":["It is a public building.","Police officers work there.","People report crimes there."],"27":["It is a public building.","Firefighters work there.","Fire trucks are kept there."],"28":["It is a shop.","Children enjoy visiting.","People buy toys there."],"29":["It is a shop.","People make bread there.","It often smells delicious."],"30":["It is a place to eat and drink.","People meet friends there.","It often serves coffee and snacks."],"31":["It is a natural place.","It rises high above nearby land.","People climb it for views."],"32":["It is a natural place.","Water flows through it.","It often reaches a lake or ocean."],"33":["It is a natural place.","It is surrounded by land.","It holds a large amount of water."],"34":["It is land.","Water surrounds it.","People may live there."],"35":["It is a natural place.","Many trees grow there.","Wild animals live there."],"36":["It is a natural place.","It gets very little rain.","It is often hot and sandy."],"37":["It is a mountain.","Hot rock can come out.","It may erupt."],"38":["It is an area with its own government.","It has borders.","It may contain many cities."],"39":["Many people live there.","It has many buildings and roads.","It is larger than a town."],"40":["It is a famous city.","It is Japan's capital.","Millions of people live there."],"41":["It is a famous city.","It has many tall buildings.","The Statue of Liberty is there."],"42":["It is a country.","It is also a continent.","Kangaroos live there."],"43":["It is a country in Europe.","London is its capital.","Big Ben is there."],"44":["People visit for fun.","It has rides.","You may see roller coasters there."],"45":["It is a place to visit.","Fish and sea animals live there.","People watch them through glass."],"46":["It is a famous river.","It flows through South America.","It carries more water than any other river."],"47":["It is a very hot and dry place.","It is in northern Africa.","It is the largest hot, dry region in the world."],"48":["It is an ocean.","It is between Asia and the Americas.","It is the world's largest ocean."],"49":["It is an ocean.","It lies south of Asia.","It is the third-largest ocean."],"50":["It is a continent.","It is around the South Pole.","It is covered with ice."],"51":["It is a cold region.","It is near the North Pole.","Summer days can have no sunset."],"52":["It is a continent.","It has many countries.","France and Italy are there."],"53":["It is a continent.","It has many countries.","It is the world's largest continent."],"54":["It is a continent.","It has deserts and grasslands.","Lions and giraffes live there."],"55":["It is a continent.","Canada and Mexico are there.","It is north of South America."],"56":["It is a continent.","The Amazon Rainforest is there.","Brazil is its largest country."],"57":["It is a famous landmark.","It was built for protection.","It stretches across northern China."],"58":["It is a famous landmark.","It is made of iron.","It stands in Paris."],"59":["It is a natural place.","It has huge colorful rock walls.","The Colorado River carved it."],"60":["It is a famous waterfall.","It is between Canada and the United States.","Huge amounts of water flow there."]}};
+const RESERVED_ITEMS={"Animals":[],"Food":[],"Things":[],"People":[],"Places":[]};
+
+const QUESTION_IMAGES=["assets/004-617090da1566.jpg","assets/005-90da308cafef.jpg","assets/006-e2262d651188.jpg","assets/007-89e99f175b0f.jpg","assets/008-5bcf8233b8d9.jpg","assets/009-7160f66db92a.jpg","assets/010-b8148ffd6090.jpg","assets/011-e03578bd7cd9.jpg","assets/012-0bc018fdee20.jpg","assets/013-40a4d7fbd175.jpg","assets/014-bade4d91ab01.jpg","assets/015-4bfa8f59f56e.jpg","assets/016-684282d3b2c9.jpg","assets/017-5265cfb44107.jpg","assets/018-21d62c201e18.jpg"];
+const ITEM_DB={"Animals":["dog","cat","rabbit","fish","bird","mouse","horse","cow","pig","sheep","chicken","duck","cheetah","frog","elephant","lion","tiger","monkey","bear","penguin","dolphin","bat","kangaroo","zebra","panda","koala","shark","octopus","snake","gorilla","deer","parrot","eagle","owl","peacock","rhinoceros","chameleon","camel","hippo","lobster","seal","jellyfish","giraffe","flamingo","hedgehog","raccoon","antelope","stingray","meerkat","armadillo","otter","squirrel","turtle","jaguar","alpaca","iguana","komodo dragon","orca","walrus","woodpecker"],"Food":["pizza","hamburger","apple","banana","orange","ice cream","sandwich","hot dog","cake","cookie","rice","blueberries","kiwi","popcorn","pancakes","curry and rice","french fries","donut","salad","sushi","strawberry","grapes","watermelon","milk","juice","egg","chicken","sausage","chocolate","cheese","spaghetti","burrito","omelet","bread","grapefruit","avocado","squash","noodles","tacos","waffle","yogurt","cereal","soup","meatballs","mango","croquette","dumplings","nachos","lasagna","coconut","croissant","artichoke","eggplant","zucchini","pomegranate","steak","pretzel","muffin","bagel","spinach"],"Things":["pencil","pen","eraser","notebook","book","ruler","scissors","backpack","crayon","marker","glue stick","desk","chair","table","clock","cup","doll","ball","teddy bear","puzzle","bicycle","helmet","umbrella","T-shirt","hat","shoes","jacket","watch","telephone","camera","computer","keyboard","headphones","flashlight","suitcase","calculator","TV","rubber bands","skateboard","fork","plate","vacuum cleaner","tablet","remote control","tissue box","compass","telescope","drone","printer","binoculars","toolbox","tire","USB drive","video game","microphone","plant","curtains","smartphone","pillow","fan"],"People":["teacher","doctor","nurse","chef","farmer","police officer","firefighter","pilot","bus driver","singer","librarian","artist","musician","baker","dentist","coach","soccer player","zookeeper","Mario","Luigi","Pikachu","Doraemon","Anpanman","Hello Kitty","Mickey Mouse","Minnie Mouse","Sonic","Conan the Detective","Stitch","Totoro","fisherman","cashier","taxi driver","detective","carpenter","veterinarian","gardener","waiter","comedian","baseball player","Shohei Ohtani","Walt Disney","Albert Einstein","Mozart","Tokugawa Ieyasu","astronaut","scientist","engineer","professor","mechanic","photographer","barber","mail carrier","magician","truck driver","Steve Jobs","Leonardo da Vinci","Shakespeare","Beethoven","Katsushika Hokusai"],"Places":["park","school","library","zoo","beach","hospital","restaurant","airport","supermarket","movie theater","museum","Mt. Fuji","castle","train station","bus stop","playground","gym","bedroom","classroom","kitchen","bathroom","living room","garden","office","post office","police station","fire station","toy store","bakery","cafe","mountain","river","lake","island","forest","desert","volcano","country","city","Tokyo","New York City","Australia","England","amusement park","aquarium","Amazon River","Sahara Desert","Pacific Ocean","Indian Ocean","Antarctica","Arctic Circle","Europe","Asia","Africa","North America","South America","Great Wall of China","Eiffel Tower","Grand Canyon","Niagara Falls"]};
+const ITEM_PREVIEWS={"Animals":["assets/019-0d5e4f0390b3.png","assets/020-20b5baf9d605.png","assets/021-ef0976ee9c58.png","assets/022-efdf29ab7a07.png","assets/023-98eb4dbdc7a6.png","assets/024-58106590d8ec.png","assets/025-81add024d7cf.png","assets/026-7088c84c0f5a.png","assets/027-d4aa6b7f9886.png","assets/028-8eb42b8a58f9.png","assets/029-ff61d93c7094.png","assets/030-05be58562894.png","assets/031-0d98cc44867d.png","assets/032-7233432827b3.png","assets/033-95d1f814d3f9.png","assets/034-41c8d2f3b301.png","assets/035-00a3b6316860.png","assets/036-bf59da6ef068.png","assets/037-ff7dbc9853a4.png","assets/038-9609aa0d396f.png","assets/039-0b47ee681d42.png","assets/040-ef73ae47a373.png","assets/041-7000a9f680fd.png","assets/042-c1b70457d107.png","assets/043-14208c58c8a3.png","assets/044-32df88b22ab8.png","assets/045-f09e891fa181.png","assets/046-409658cdb9aa.png","assets/047-a1e35ce8cd02.png","assets/048-be47d42ec6fd.png","assets/049-d9a4f4633c39.png","assets/050-21dde0cee0ce.png","assets/051-92b0439255af.png","assets/052-8392ffeec759.png","assets/053-488ac9cab606.png","assets/054-455395b111b7.png","assets/055-2dfedc105846.png","assets/056-dbe849eeeaae.png","assets/057-4be5f9cd654b.png","assets/058-a03f91e7bf5f.png","assets/059-51623a90b4c2.png","assets/060-32a401613f2e.png","assets/061-2292c63f94f4.png","assets/062-ebb30d630e9e.png","assets/063-d91d8dd6c841.png","assets/064-3d9b4fa5b135.png","assets/065-5df6a3795f55.png","assets/066-137128edf3cf.png","assets/067-4e18dbe5679e.png","assets/068-5affeae2ccf3.png","assets/069-9f8424f943d0.png","assets/070-e4e8afa43d81.png","assets/071-bacebc1c8e0a.png","assets/072-f3794982b8e8.png","assets/073-fff018404bdf.png","assets/074-c550b33bcc0e.png","assets/075-0e2be5730042.png","assets/076-e885005ba607.png","assets/077-aa5182a8a7f4.png","assets/078-de144f2a1664.png"],"Food":["assets/079-eeb474404041.png","assets/080-fa40720c2f8a.png","assets/081-e4d79630b780.png","assets/082-856eb77cb089.png","assets/083-ed48c2136ca5.png","assets/084-b7918a22eb26.png","assets/085-836a58393121.png","assets/086-477c0e0e1f91.png","assets/087-d03b422ecf9a.png","assets/088-7ca34a0f3b76.png","assets/089-6d687c3a422b.png","assets/090-9d99fc26c75b.png","assets/091-0e745840447f.png","assets/092-4b1efa616e35.png","assets/093-5af0ea79e80a.png","assets/094-34a53ace2b0f.png","assets/095-db394c1529c2.png","assets/096-9a78a06c94e4.png","assets/097-34d24120149a.png","assets/098-f4f6baae4cf5.png","assets/099-27579cbe2005.png","assets/100-dc11863316a2.png","assets/101-1aefd1c7b5f5.png","assets/102-edd0d2c8a44b.png","assets/103-aab6afb07622.png","assets/104-ac5101e164ec.png","assets/105-9f6f62fdecfa.png","assets/106-d9080a8dc94d.png","assets/107-c137cf1b9e46.png","assets/108-35d38bfad0c0.png","assets/109-aaf6b7fc8f81.png","assets/110-195711c04184.png","assets/111-93522aef8690.png","assets/112-0f7007c0923c.png","assets/113-d8d1dd63a968.png","assets/114-58c170e82dbd.png","assets/115-e477de39ffd1.png","assets/116-923741b89a4e.png","assets/117-1c4fff5534d6.png","assets/118-e21f19b87361.png","assets/119-a2dc655eb938.png","assets/120-9de567925cea.png","assets/121-8df3c386ee94.png","assets/122-a5c09088e276.png","assets/123-848794e30549.png","assets/124-cd2c70ef270f.png","assets/125-4096ba0df2bd.png","assets/126-1ac923871b23.png","assets/127-734c1d53b96b.png","assets/128-4f37844d2b9d.png","assets/129-f86ff48be9d4.png","assets/130-824cf2da5e9e.png","assets/131-8efc0b2c6433.png","assets/132-ac647531cf6c.png","assets/133-dcede8c3cade.png","assets/134-ff8f5d6efa27.png","assets/135-784294f47b4b.png","assets/136-bedba839e763.png","assets/137-bd163d7512a3.png","assets/138-3ebe96fabd25.png"],"Things":["assets/139-403877a2217e.png","assets/140-aa5cdd32ccd6.png","assets/141-11fc6283fb38.png","assets/142-4f432ea0a917.png","assets/143-2f951c44615a.png","assets/144-94dc64d15535.png","assets/145-f39f99f0c071.png","assets/146-6ac6cb9feabd.png","assets/147-5ed7fdf3d1de.png","assets/148-ece0f1e71f16.png","assets/149-43e540c8f146.png","assets/150-a34b0b8050e4.png","assets/151-aa00d937f952.png","assets/152-b66b944cff65.png","assets/153-ee8d10046b1f.png","assets/154-2e37ecfd0757.png","assets/155-9afeb4f1f3a5.png","assets/156-4ecac651a368.png","assets/157-4b1bd4133459.png","assets/158-83e74134b2e8.png","assets/159-8ac0d69f49ad.png","assets/160-aa6f5169723f.png","assets/161-89a53b8778dc.png","assets/162-973d57138133.png","assets/163-79afa741b5e9.png","assets/164-7e4b588efeab.png","assets/165-a7f8eb3544c5.png","assets/166-e7b945a65a20.png","assets/167-d9b5fe638053.png","assets/168-5916c9728366.png","assets/169-5df608f3940e.png","assets/170-55dd984fe726.png","assets/171-6dc103fafe19.png","assets/172-06335b5777f3.png","assets/173-e26321dafa8a.png","assets/174-00ca101cab60.png","assets/175-f873e611fbac.png","assets/176-eb9506534c82.png","assets/177-d233ea74b2f5.png","assets/178-0da0f248b31d.png","assets/179-afa08664c486.png","assets/180-333e65a1ae6b.png","assets/181-d3b69bd93dc4.png","assets/182-ddef6e8e7966.png","assets/183-6e1ba4a7cae3.png","assets/184-c28fd153f23c.png","assets/185-d39c531d0f2e.png","assets/186-218a8f2efed8.png","assets/187-5f1e77452c80.png","assets/188-5a23442ad745.png","assets/189-463868f5b59f.png","assets/190-1eae68e211a0.png","assets/191-44688b661e4b.png","assets/192-d80eefd7ff61.png","assets/193-cbf8cbe83cb3.png","assets/194-80caafce2394.png","assets/195-78687cfe7165.png","assets/196-31a20f495d59.png","assets/197-f1bdf73388bb.png","assets/198-c3752fda6686.png"],"People":["assets/199-31ce59f6d982.png","assets/200-fdc897bdaf02.png","assets/201-4188962e665d.png","assets/202-3f2b459471d6.png","assets/203-8d6cff3ce370.png","assets/204-d36ef084e87e.png","assets/205-00e759fed036.png","assets/206-27701d5803e4.png","assets/207-8199b6335791.png","assets/208-100957350b36.png","assets/209-718d3cef9e55.png","assets/210-45a6e78a2f3a.png","assets/211-d0cf980c0675.png","assets/212-d122ac1cbc7c.png","assets/213-fc508530bcbc.png","assets/214-ac7474522e36.png","assets/215-6d1523683e33.png","assets/216-a227c98042c4.png","assets/217-f05c7b3e0325.png","assets/218-c11e75fdd50b.png","assets/219-3feb305d8a12.png","assets/220-cf720015c4b2.png","assets/221-48945a3f0524.png","assets/222-cfdcc66640b9.png","assets/223-22063b0fe7c6.png","assets/224-af2aa564df7a.png","assets/225-fcd586ed59e6.png","assets/226-d28fb9303a5f.png","assets/227-8ee95c1e404a.png","assets/228-bed453f6cebf.png","assets/229-10aaf0f0daae.png","assets/230-fe0b19e17f3b.png","assets/231-e1302d173aa5.png","assets/232-90d9a6d36edf.png","assets/233-f8dd4de9c64d.png","assets/234-01c2dce2401e.png","assets/235-a204d301d45c.png","assets/236-53809561b7bd.png","assets/237-e967ec84bb29.png","assets/238-31a530822456.png","assets/239-c0c426132bad.png","assets/240-9c14d9ad0f19.png","assets/241-231f1fc8561d.png","assets/242-e255b58e851e.png","assets/243-0359788d878a.png","assets/244-1b0813d48f5d.png","assets/245-f2148d092441.png","assets/246-5c47d52f4b9e.png","assets/247-83c17f10b0c0.png","assets/248-36d289b66c5b.png","assets/249-cbd03246d528.png","assets/250-299f709d87fa.png","assets/251-ea154aef98e2.png","assets/252-34300adaf004.png","assets/253-433846f8dd6e.png","assets/254-b3c95887382f.png","assets/255-ca9ea52871ef.png","assets/256-82a6c0006f96.png","assets/257-ae709418f804.png","assets/258-bee9312f7308.png"],"Places":["assets/259-00202550215e.png","assets/260-759ed59384ff.png","assets/261-b860cf19ad72.png","assets/262-dabc1aae5141.png","assets/263-48bcdd249724.png","assets/264-8dca4aae9e3c.png","assets/265-a79accc2fec4.png","assets/266-c0beb74f1bc8.png","assets/267-ef15b16a4b8e.png","assets/268-3a0b8facc524.png","assets/269-fb88bd234baf.png","assets/270-6db04db64ac4.png","assets/271-248924cda90f.png","assets/272-1313fe8f8ea4.png","assets/273-6f5199cadcbe.png","assets/274-1beddb291c65.png","assets/275-2a7506b361b6.png","assets/276-43e8e8fb61a1.png","assets/277-acd28f5a5226.png","assets/278-55723994514a.png","assets/279-38aab0f7ee1a.png","assets/280-587924ed5c6c.png","assets/281-3e89455fae24.png","assets/282-0064d4059e48.png","assets/283-1842fd5accdd.png","assets/284-6acebe534ca0.png","assets/285-1d8d1e30f9d2.png","assets/286-6696b78b21ae.png","assets/287-8deac82e2308.png","assets/288-3dfa91d478a0.png","assets/289-0a761da9b10c.png","assets/290-d09d025f07a7.png","assets/291-76eab6e60698.png","assets/292-2799a643fffe.png","assets/293-1e7026e21197.png","assets/294-c977984c34ba.png","assets/295-ca5142866248.png","assets/296-a0eac9f5740d.png","assets/297-b8ff6d93540f.png","assets/298-f7cbf1f5f705.png","assets/299-c5474f74348e.png","assets/300-a64f9ac57cbb.png","assets/301-f550429c5d9f.png","assets/302-aea42a761396.png","assets/303-f4893d3eea6c.png","assets/304-068e52083907.png","assets/305-bde17f38bbfe.png","assets/306-c0db39c8450c.png","assets/307-c4beb1922868.png","assets/308-e0bbdb00d13c.png","assets/309-3a4268baef20.png","assets/310-b0330a68bb61.png","assets/311-c37d3744de45.png","assets/312-215c8c968a36.png","assets/313-85d08198607a.png","assets/314-1654b555b49c.png","assets/315-2e1673974602.png","assets/316-8baa0de6139c.png","assets/317-578d6b2e4b0a.png","assets/318-b222c58b5e06.png"]};
+const CATEGORY_INDEX={Animals:0,Food:1,Things:2,People:3,Places:4},K='eyeGameShowConsoleV3',T=120,A=20;let roundDuration=T;
+const urlParams=new URLSearchParams(location.search),isAudience=urlParams.get('audience')==='1',isClassroom=urlParams.get('classroom')==='1',isEvent=urlParams.get('mode')==='event';
+if(isAudience)document.body.classList.add('audience-mode');
+if(isClassroom)document.body.classList.add('classroom-mode');
+if(isEvent)document.body.classList.add('event-mode');
+const tiles=[...document.querySelectorAll('.tile')],cards=[...document.querySelectorAll('.team-card')],activeEl=document.getElementById('activeValue'),undo=document.getElementById('undoBtn'),board=document.getElementById('board'),questionView=document.getElementById('questionView'),questionImage=document.getElementById('questionImage'),panel=document.getElementById('timerPanel'),display=document.getElementById('timerDisplay'),selected=document.getElementById('selectedTile'),levelLabel=document.getElementById('levelLabel'),pause=document.getElementById('pauseButton'),resetTimerBtn=document.getElementById('resetTimerButton'),answerTimerBtn=document.getElementById('answerTimerButton'),closeTimerBtn=document.getElementById('closeTimerButton'),toast=document.getElementById('toast');
+const mcView=document.getElementById('mcQuestionView'),mcSelected=document.getElementById('mcSelectedTile'),mcPool=document.getElementById('mcPoolLabel'),itemPreview=document.getElementById('itemPreview'),placeholder=document.getElementById('previewPlaceholder'),previewAdjustments=document.getElementById('previewAdjustments'),itemNumber=document.getElementById('itemNumber'),itemName=document.getElementById('itemName'),remainingItems=document.getElementById('remainingItems'),mcTimer=document.getElementById('mcTimerDisplay'),audienceStatus=document.getElementById('audienceStatus'),showAudienceBtn=document.getElementById('showAudienceBtn'),revealHintBtn=document.getElementById('revealHintBtn'),mcHints=document.getElementById('mcHints'),mcHintList=document.getElementById('mcHintList'),hintView=document.getElementById('hintView'),hintLines=document.getElementById('hintLines'),revealView=document.getElementById('revealView'),revealImage=document.getElementById('revealImage'),revealName=document.getElementById('revealName'),revealNumber=document.getElementById('revealNumber');
+let s={usedTiles:{},scores:[0,0,0,0],teamNames:['Team 1','Team 2','Team 3','Team 4'],activeTileId:null,awardedTeams:[],history:[],usedItems:{},previewAdjustments:{},currentItem:null,previousItem:null,view:'board',reveal:false,hintCount:0},remaining=roundDuration,timerId=null,running=false,timerStarted=false,toastId=null,mode='round',audioCtx=null,audienceWindow=null,lastPing=0,cropCache=new Map(),questionLoadToken=0;
+const snap=()=>JSON.parse(JSON.stringify({usedTiles:s.usedTiles,scores:s.scores,teamNames:s.teamNames,activeTileId:s.activeTileId,awardedTeams:s.awardedTeams,usedItems:s.usedItems,previewAdjustments:s.previewAdjustments,currentItem:s.currentItem,previousItem:s.previousItem,view:s.view,reveal:s.reveal,hintCount:s.hintCount}));
+function push(label){s.history.push({label,snapshot:snap()});if(s.history.length>50)s.history.shift()}
+function save(){if(!isAudience)localStorage.setItem(K,JSON.stringify(s))}
+function load(){try{const x=JSON.parse(localStorage.getItem(K)||'null');if(x)s={...s,...x}}catch(e){}}
+function msg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toastId);toastId=setTimeout(()=>toast.classList.remove('show'),1600)}
+async function tightCrop(src,padX=.035,padY=padX){const key=`tight|${padX}|${padY}|${src}`;if(cropCache.has(key))return cropCache.get(key);const promise=new Promise(resolve=>{const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas'),w=im.naturalWidth,h=im.naturalHeight;c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const d=x.getImageData(0,0,w,h).data;let minX=w,minY=h,maxX=-1,maxY=-1;const step=Math.max(1,Math.floor(Math.min(w,h)/900));for(let y=0;y<h;y+=step)for(let xx=0;xx<w;xx+=step){const i=(y*w+xx)*4,r=d[i],g=d[i+1],b=d[i+2],a=d[i+3];if((a>12&&(r<246||g<246||b<246)&&Math.max(r,g,b)-Math.min(r,g,b)>1)||(a>12&&(r+g+b)<730)){if(xx<minX)minX=xx;if(xx>maxX)maxX=xx;if(y<minY)minY=y;if(y>maxY)maxY=y}}if(maxX<0)return resolve(src);const px=Math.round((maxX-minX)*padX),py=Math.round((maxY-minY)*padY);minX=Math.max(0,minX-px);minY=Math.max(0,minY-py);maxX=Math.min(w-1,maxX+px);maxY=Math.min(h-1,maxY+py);const cw=maxX-minX+1,ch=maxY-minY+1,o=document.createElement('canvas');o.width=cw;o.height=ch;o.getContext('2d').drawImage(im,minX,minY,cw,ch,0,0,cw,ch);resolve(o.toDataURL('image/jpeg',.94))}catch(e){resolve(src)}};im.onerror=()=>resolve(src);im.src=src});cropCache.set(key,promise);return promise}
+function previewKey(item){return item?`${item.category}:${item.number}`:''}
+function previewAdjustment(item){const a=s.previewAdjustments?.[previewKey(item)]||{};return{x:Number(a.x)||0,y:Number(a.y)||0,zoom:Math.min(1.8,Math.max(.75,Number(a.zoom)||1))}}
+function focusItemCrop(src,adjustment={}){if(typeof src==='string'&&src.startsWith('data:image/png;base64,'))return Promise.resolve(src);const x=Number(adjustment.x)||0,y=Number(adjustment.y)||0,zoom=Math.min(1.8,Math.max(.75,Number(adjustment.zoom)||1));const key=`item-focus-v325|${x}|${y}|${zoom}|${src}`;if(cropCache.has(key))return cropCache.get(key);const promise=new Promise(resolve=>{const im=new Image();im.onload=()=>{try{const w=im.naturalWidth,h=im.naturalHeight,targetRatio=65/56;let baseW=w,baseH=h;if(w/h>targetRatio)baseW=h*targetRatio;else baseH=w/targetRatio;const sw=Math.min(w,baseW/zoom),sh=Math.min(h,baseH/zoom);const defaultCx=w*.50,defaultCy=h*.46;const cx=defaultCx+x*w*.18,cy=defaultCy+y*h*.18;const sx=Math.max(0,Math.min(w-sw,cx-sw/2)),sy=Math.max(0,Math.min(h-sh,cy-sh/2));const o=document.createElement('canvas');o.width=650;o.height=560;const ctx=o.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,o.width,o.height);ctx.drawImage(im,sx,sy,sw,sh,0,0,o.width,o.height);resolve(o.toDataURL('image/jpeg',.97))}catch(e){resolve(src)}};im.onerror=()=>resolve(src);im.src=src});cropCache.set(key,promise);return promise}
+function refreshCurrentPreview(){const ci=s.currentItem;if(!ci)return;const src=ITEM_PREVIEWS[ci.category][ci.number-1],adj=previewAdjustment(ci);focusItemCrop(src,adj).then(c=>{if(s.currentItem&&previewKey(s.currentItem)===previewKey(ci))itemPreview.src=c});if(s.reveal){broadcast()}}
+function adjustPreview(action){const ci=s.currentItem;if(!ci)return;const key=previewKey(ci),a=previewAdjustment(ci),step=.12;switch(action){case'left':a.x-=step;break;case'right':a.x+=step;break;case'up':a.y-=step;break;case'down':a.y+=step;break;case'zoomIn':a.zoom=Math.min(1.8,a.zoom+.1);break;case'zoomOut':a.zoom=Math.max(.75,a.zoom-.1);break;case'center':a.x=0;a.y=0;break;case'reset':a.x=0;a.y=0;a.zoom=1;break}a.x=Math.max(-1.8,Math.min(1.8,a.x));a.y=Math.max(-1.8,Math.min(1.8,a.y));s.previewAdjustments[key]=a;save();refreshCurrentPreview();msg('Preview position saved')}
+
+function activeTile(){return s.activeTileId?tiles.find(t=>t.dataset.id===s.activeTileId):null}
+function levelFor(points){return points<=200?1:points<=400?2:3}
+function limitFor(points){return points<=200?30:points<=400?45:60}
+function imageFor(t){const ci=CATEGORY_INDEX[t.dataset.category]??0,level=levelFor(Number(t.dataset.points));return{src:QUESTION_IMAGES[ci*3+level-1],level}}
+function itemHints(ci=s.currentItem){return ci?((PRACTICE_HINT_DB[ci.category]||{})[String(ci.number)]||[]):[]}
+function publicState(){const revealItem=s.reveal&&s.currentItem?{...s.currentItem,preview:ITEM_PREVIEWS[s.currentItem.category][s.currentItem.number-1],adjustment:previewAdjustment(s.currentItem)}:null;return{type:'EYE_STATE',state:{usedTiles:s.usedTiles,scores:s.scores,teamNames:s.teamNames,activeTileId:s.activeTileId,awardedTeams:s.awardedTeams,view:s.view,reveal:s.reveal,revealItem,hintCount:s.hintCount||0,hintTexts:itemHints().slice(0,s.hintCount||0),remaining,mode,running,timerStarted}}}
+function broadcast(){if(isAudience)return;try{audienceWindow&& !audienceWindow.closed && audienceWindow.postMessage(publicState(),'*')}catch(e){};localStorage.setItem(K+'_PUBLIC',JSON.stringify(publicState().state))}
+function renderScores(){tiles.forEach(t=>{t.classList.toggle('used',!!s.usedTiles[t.dataset.id]);t.classList.toggle('active',t.dataset.id===s.activeTileId)});cards.forEach((c,i)=>{c.querySelector('[data-score]').textContent=s.scores[i];const n=c.querySelector('.team-name');if(document.activeElement!==n)n.value=s.teamNames[i];const a=!!s.activeTileId,w=s.awardedTeams.includes(i);c.classList.toggle('award-ready',a&&!w);c.classList.toggle('awarded',a&&w)});document.querySelectorAll('[data-shared-score]').forEach(el=>{const i=Number(el.dataset.sharedScore);el.textContent=s.scores[i]??0});document.querySelectorAll('[data-shared-name]').forEach(el=>{const i=Number(el.dataset.sharedName);el.textContent=s.teamNames[i]||`Team ${i+1}`});const a=activeTile();activeEl.textContent=a?`${a.dataset.category} ${a.dataset.points}`:'None selected';undo.disabled=!s.history.length}
+function showBoard(){s.view='board';s.reveal=false;s.hintCount=0;hintView.classList.remove('show');hintView.setAttribute('aria-hidden','true');revealView.classList.remove('show');revealView.setAttribute('aria-hidden','true');board.style.display='block';questionView.classList.remove('show');mcView.classList.remove('show');questionView.setAttribute('aria-hidden','true');mcView.setAttribute('aria-hidden','true')}
+function cropChart(src,isPlaces=false){
+// Places pages must remain completely uncropped so the bottom row is always visible.
+if(isPlaces)return Promise.resolve(src);
+// Other categories keep a modest crop, but with noticeably more horizontal and
+// vertical breathing room so bottom-row labels remain readable.
+return tightCrop(src,.115,.085);
+}
+function showPublicQuestion(){const t=activeTile();if(!t)return showBoard();const q=imageFor(t),token=++questionLoadToken,isPlaces=t.dataset.category==='Places';selected.textContent=`${t.dataset.category} — ${t.dataset.points} points`;levelLabel.textContent=`Level ${q.level}`;questionImage.src=q.src;cropChart(q.src,isPlaces).then(c=>{if(token===questionLoadToken)questionImage.src=c});questionImage.alt=`${t.dataset.category} Level ${q.level} item chart`;board.style.display='none';mcView.classList.remove('show');questionView.classList.add('show');questionView.setAttribute('aria-hidden','false');if(s.reveal&&s.revealItem){hintView.classList.remove('show');hintView.setAttribute('aria-hidden','true');revealName.textContent=s.revealItem.name;revealNumber.textContent=String(s.revealItem.number);revealImage.src=s.revealItem.preview;revealView.classList.add('show');revealView.setAttribute('aria-hidden','false')}else{revealView.classList.remove('show');revealView.setAttribute('aria-hidden','true');const shown=(s.hintTexts||[]).slice(0,s.hintCount||0);if(shown.length){hintLines.innerHTML=shown.map(h=>`<div>${h}</div>`).join('');hintView.classList.add('show');hintView.setAttribute('aria-hidden','false')}else{hintLines.innerHTML='';hintView.classList.remove('show');hintView.setAttribute('aria-hidden','true')}}}
+function showMcQuestion(){const t=activeTile();if(!t)return showBoard();board.style.display='none';questionView.classList.remove('show');mcView.classList.add('show');mcView.setAttribute('aria-hidden','false');mcSelected.textContent=`${t.dataset.category} — ${t.dataset.points} points`;mcPool.textContent=`Random pool: items 1-${limitFor(Number(t.dataset.points))}`;renderGenerator()}
+function applyView(){if(s.view==='question'){(isAudience||isClassroom)?showPublicQuestion():showMcQuestion()}else showBoard()}
+function renderGenerator(){const t=activeTile();if(!t)return;const cat=t.dataset.category,limit=limitFor(Number(t.dataset.points)),used=(s.usedItems[cat]||[]).filter(n=>n<=limit);remainingItems.textContent=`${limit-used.length} of ${limit} items remaining in this pool`;const ci=s.currentItem;if(ci&&ci.category===cat){itemNumber.textContent=String(ci.number);itemName.textContent=ci.name;const src=ITEM_PREVIEWS[cat][ci.number-1],adj=previewAdjustment(ci);itemPreview.src=src;focusItemCrop(src,adj).then(c=>{if(s.currentItem&&s.currentItem.category===cat&&s.currentItem.number===ci.number)itemPreview.src=c});itemPreview.classList.add('show');placeholder.style.display='none';previewAdjustments.classList.toggle('show',!['Food','Animals','Things','People','Places'].includes(cat));const hints=itemHints(ci);mcHintList.innerHTML=hints.length?hints.map(h=>`<li>${h}</li>`).join(''):'<li>Hints have not been added for this item yet.</li>';mcHints.classList.add('show');revealHintBtn.disabled=!hints.length||s.reveal||(s.hintCount||0)>=hints.length;revealHintBtn.textContent=hints.length&&s.hintCount?`Reveal Hint ${Math.min((s.hintCount||0)+1,hints.length)}`:'Reveal Hint';showAudienceBtn.disabled=false;showAudienceBtn.textContent=s.reveal?'Hide from Audience':'Show the Audience';showAudienceBtn.classList.toggle('revealed',!!s.reveal)}else{itemNumber.textContent='-';itemName.textContent='No item generated';itemPreview.classList.remove('show');placeholder.style.display='block';previewAdjustments.classList.remove('show');mcHints.classList.remove('show');mcHintList.innerHTML='';revealHintBtn.disabled=true;revealHintBtn.textContent='Reveal Hint';showAudienceBtn.disabled=true;showAudienceBtn.textContent='Show the Audience';showAudienceBtn.classList.remove('revealed')}document.getElementById('generateBtn').disabled=!!ci;document.getElementById('regenerateBtn').disabled=!ci;document.getElementById('restoreItemBtn').disabled=!s.previousItem}
+function drawTimer(){display.textContent=fmt(remaining);mcTimer.textContent=fmt(remaining);display.classList.toggle('finished',remaining===0);display.classList.toggle('warning',running&&remaining>0&&remaining<=10);mcTimer.classList.toggle('warning',running&&remaining>0&&remaining<=10);panel.classList.toggle('answer-mode',mode==='answer');answerTimerBtn.textContent=mode==='answer'?'Restart 20 sec':'Start 20 sec';document.getElementById('mcAnswerTimerButton').textContent=mode==='answer'?'Restart 20 sec':'Start 20 sec';pause.textContent=running?'Pause':((!timerStarted||remaining===0)?'Start':'Resume');document.getElementById('mcPauseButton').textContent=pause.textContent;document.getElementById('mcResetTimerButton').textContent='Reset '+fmt(roundDuration)}
+function stop(){if(timerId)clearInterval(timerId);timerId=null;running=false;drawTimer();broadcast()}
+function start(){if(isAudience)return;if(remaining<=0)remaining=mode==='answer'?A:roundDuration;audio();if(timerId)clearInterval(timerId);running=true;timerStarted=true;drawTimer();broadcast();timerId=setInterval(()=>{remaining--;if(mode==='round'&&remaining===60)minuteChime();if(mode==='round'&&remaining<=10&&remaining>0)tick();drawTimer();broadcast();if(remaining<=0){stop();mode==='round'?bell():answerChime()}},1000)}
+function resetTimer(go=false){stop();mode='round';remaining=roundDuration;timerStarted=false;drawTimer();broadcast();if(go)start()}
+function startAnswer(){if(isAudience)return;stop();mode='answer';remaining=A;timerStarted=false;drawTimer();start()}
+function setCustomRoundTime(source='mc'){if(isAudience)return;const classroom=source==='classroom',minInput=document.getElementById(classroom?'classroomCustomMinutes':'customMinutes'),secInput=document.getElementById(classroom?'classroomCustomSeconds':'customSeconds');let mins=Math.max(0,Math.min(59,Number(minInput.value)||0)),secs=Math.max(0,Math.min(59,Number(secInput.value)||0));const total=Math.floor(mins*60+secs);if(total<1)return msg('Please set a time of at least one second.');roundDuration=total;['customMinutes','classroomCustomMinutes'].forEach(id=>document.getElementById(id).value=Math.floor(total/60));['customSeconds','classroomCustomSeconds'].forEach(id=>document.getElementById(id).value=total%60);stop();mode='round';remaining=roundDuration;timerStarted=false;drawTimer();broadcast();msg('Round timer set to '+fmt(roundDuration));}
+function render(){renderScores();drawTimer();applyView();save();broadcast()}
+function audio(){if(!audioCtx){const C=window.AudioContext||window.webkitAudioContext;if(C)audioCtx=new C()}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()}
+function tone(f,d,v=.1,type='sine',delay=0){audio();if(!audioCtx)return;const st=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(f,st);g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(v,st+.01);g.gain.exponentialRampToValueAtTime(.0001,st+d);o.connect(g);g.connect(audioCtx.destination);o.start(st);o.stop(st+d+.03)}
+function minuteChime(){tone(659,.18,.22,'sine',0);tone(784,.25,.22,'sine',.18)}function tick(){tone(1200,.055,.13,'square',0)}function timeUpVoice(){try{const a=new Audio(TIME_UP_AUDIO);a.volume=.85;a.play().catch(()=>{})}catch(e){}}function bell(){tone(392,.14,.28,'square',0);tone(523,.18,.25,'square',.11);tone(784,.35,.22,'sawtooth',.22);setTimeout(timeUpVoice,170)}function answerChime(){tone(523,.15,.22,'sine',0);tone(659,.15,.22,'sine',.14);tone(784,.35,.24,'sine',.28)}
+const REVEAL_AUDIO='assets/319-ca88efb8651b.mp3';const POINT_AUDIO='assets/320-e949da188a16.mp3';
+let soundEnabled=localStorage.getItem(K+'_SOUND')!=='off';
+function updateSoundButton(){const b=document.getElementById('soundToggleBtn');if(!b)return;b.textContent=soundEnabled?'🔊 Sound On':'🔇 Sound Off';b.classList.toggle('muted',!soundEnabled);b.setAttribute('aria-pressed',String(!soundEnabled))}
+function playEmbeddedSound(src,volume=1){if(!soundEnabled)return;try{const a=new Audio(src);a.volume=volume;a.play().catch(()=>{})}catch(e){}}
+function celebrationSound(){playEmbeddedSound(REVEAL_AUDIO,.82)}
+function pointAwardSound(){playEmbeddedSound(POINT_AUDIO,.82)}
+function triggerCelebration(){const layer=document.getElementById('celebrationLayer');if(!layer)return;layer.textContent='';for(let burst=0;burst<5;burst++){const cx=12+Math.random()*76,cy=18+Math.random()*50,h=Math.floor(Math.random()*360);for(let i=0;i<18;i++){const a=Math.PI*2*i/18,dist=100+Math.random()*170,p=document.createElement('i');p.className='celebration-particle';p.style.left=cx+'%';p.style.top=cy+'%';p.style.setProperty('--h',String((h+i*6)%360));p.style.setProperty('--tx',Math.cos(a)*dist+'px');p.style.setProperty('--ty',Math.sin(a)*dist+'px');p.style.setProperty('--d',(1.05+Math.random()*.7)+'s');p.style.setProperty('--delay',(burst*.18+Math.random()*.12)+'s');layer.appendChild(p)}}for(let i=0;i<70;i++){const p=document.createElement('i');p.className='celebration-confetti';p.style.setProperty('--x',Math.random()*100+'%');p.style.setProperty('--h',String(Math.floor(Math.random()*360)));p.style.setProperty('--r',Math.floor(Math.random()*360)+'deg');p.style.setProperty('--d',(1.8+Math.random()*1.5)+'s');p.style.setProperty('--delay',(Math.random()*.75)+'s');layer.appendChild(p)}setTimeout(()=>{layer.textContent=''},3600)}
+function fmt(n){return `${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`}
+function drawTimer(){display.textContent=fmt(remaining);mcTimer.textContent=fmt(remaining);display.classList.toggle('finished',remaining===0);display.classList.toggle('warning',running&&remaining>0&&remaining<=10);mcTimer.classList.toggle('warning',running&&remaining>0&&remaining<=10);panel.classList.toggle('answer-mode',mode==='answer');answerTimerBtn.textContent=mode==='answer'?'Restart 20 sec':'Start 20 sec';document.getElementById('mcAnswerTimerButton').textContent=mode==='answer'?'Restart 20 sec':'Start 20 sec';const timerButtonText=running?'Pause':((!timerStarted||remaining===0)?'Start':'Resume');pause.textContent=timerButtonText;document.getElementById('mcPauseButton').textContent=timerButtonText;resetTimerBtn.textContent='Reset '+fmt(roundDuration);document.getElementById('mcResetTimerButton').textContent='Reset '+fmt(roundDuration)}
+function stop(){if(timerId)clearInterval(timerId);timerId=null;running=false;drawTimer();broadcast()}
+function start(){if(isAudience)return;if(remaining<=0)remaining=mode==='answer'?A:roundDuration;audio();if(timerId)clearInterval(timerId);running=true;timerStarted=true;drawTimer();broadcast();timerId=setInterval(()=>{remaining--;if(mode==='round'&&remaining===60)minuteChime();if(mode==='round'&&remaining<=10&&remaining>0)tick();drawTimer();broadcast();if(remaining<=0){stop();mode==='round'?bell():answerChime()}},1000)}
+function resetTimer(go=false){stop();mode='round';remaining=roundDuration;timerStarted=false;drawTimer();broadcast();if(go)start()}
+function startAnswer(){if(isAudience)return;stop();mode='answer';remaining=A;timerStarted=false;drawTimer();start()}
+function setCustomRoundTime(source='mc'){if(isAudience)return;const classroom=source==='classroom',minInput=document.getElementById(classroom?'classroomCustomMinutes':'customMinutes'),secInput=document.getElementById(classroom?'classroomCustomSeconds':'customSeconds');let mins=Math.max(0,Math.min(59,Number(minInput.value)||0)),secs=Math.max(0,Math.min(59,Number(secInput.value)||0));const total=Math.floor(mins*60+secs);if(total<1)return msg('Please set a time of at least one second.');roundDuration=total;['customMinutes','classroomCustomMinutes'].forEach(id=>document.getElementById(id).value=Math.floor(total/60));['customSeconds','classroomCustomSeconds'].forEach(id=>document.getElementById(id).value=total%60);stop();mode='round';remaining=roundDuration;timerStarted=false;drawTimer();broadcast();msg('Round timer set to '+fmt(roundDuration));}
+function chooseItem(force=false){const t=activeTile();if(!t)return;s.reveal=false;s.hintCount=0;const cat=t.dataset.category,limit=limitFor(Number(t.dataset.points));if(force&&s.currentItem&&!confirm('Discard this item and generate another?'))return;const used=new Set(s.usedItems[cat]||[]),pool=[];for(let n=1;n<=limit;n++)if(!used.has(n))pool.push(n);if(!pool.length)return msg('No unused items remain in this pool.');push(force?'Regenerate item':'Generate item');if(s.currentItem)s.previousItem=s.currentItem;const n=pool[Math.floor(Math.random()*pool.length)];s.usedItems[cat]=[...(s.usedItems[cat]||[]),n];s.currentItem={category:cat,number:n,name:ITEM_DB[cat][n-1]};renderGenerator();save()}
+function restorePrevious(){if(!s.previousItem)return;push('Restore previous item');s.reveal=false;s.hintCount=0;const prev=s.previousItem,cur=s.currentItem;if(cur){const a=s.usedItems[cur.category]||[];s.usedItems[cur.category]=a.filter(n=>n!==cur.number)}s.currentItem=prev;s.previousItem=cur;renderGenerator();save()}
+function returnBoard(){stop();s.view='board';s.reveal=false;s.hintCount=0;s.currentItem=null;s.previousItem=null;render()}
+function revealNextHint(){if(!s.currentItem)return msg('Generate an item first.');const hints=itemHints();if(!hints.length)return msg('Hints are not available for this item yet.');if(s.reveal)return;const next=Math.min((s.hintCount||0)+1,hints.length);if(next===s.hintCount)return msg('All hints are already showing.');s.hintCount=next;renderGenerator();save();broadcast()}
+function toggleReveal(){if(!s.currentItem)return msg('Generate an item first.');s.reveal=!s.reveal;if(s.reveal){s.hintCount=0;celebrationSound()}renderGenerator();save();broadcast()}
+function openAudience(){const base=location.href.split('?')[0].split('#')[0];audienceWindow=window.open(base+'?audience=1','EYE_Audience','popup=yes');setTimeout(broadcast,500)}
+window.addEventListener('message',e=>{if(e.data&&e.data.type==='EYE_READY'&&!isAudience){audienceWindow=e.source;lastPing=Date.now();audienceStatus.textContent='Audience: connected';audienceStatus.classList.add('audience-connected');broadcast()}if(isAudience&&e.data&&e.data.type==='EYE_STATE')applyPublic(e.data.state)});
+function applyPublic(p){const wasReveal=!!s.reveal;s={...s,...p,hintCount:p.hintCount||0,hintTexts:p.hintTexts||[]};remaining=p.remaining;mode=p.mode;running=p.running;timerStarted=!!p.timerStarted;renderScores();drawTimer();applyView();if(!wasReveal&&p.reveal)triggerCelebration()}
+if(isAudience){try{window.opener&&window.opener.postMessage({type:'EYE_READY'},'*')}catch(e){};setInterval(()=>{try{const p=JSON.parse(localStorage.getItem(K+'_PUBLIC')||'null');if(p)applyPublic(p)}catch(e){}},700)}
+else setInterval(()=>{const ok=audienceWindow&&!audienceWindow.closed;audienceStatus.textContent=ok?'Audience: connected':'Audience: not connected';audienceStatus.classList.toggle('audience-connected',!!ok)},1000);
+
+if(!isAudience){
+tiles.forEach(t=>t.addEventListener('click',()=>{const id=t.dataset.id,u=!!s.usedTiles[id];push(u?'Restore tile':'Select tile');if(u){delete s.usedTiles[id];if(s.activeTileId===id){s.activeTileId=null;s.awardedTeams=[];s.view='board'}}else{s.usedTiles[id]=true;s.activeTileId=id;s.awardedTeams=[];s.currentItem=null;s.previousItem=null;s.hintCount=0;s.view='question';resetTimer(false)}render()}));
+cards.forEach((c,i)=>{c.addEventListener('click',e=>{if(e.target.closest('button')||e.target.closest('input'))return;const a=activeTile();if(!a)return msg('Select a point tile first.');if(s.awardedTeams.includes(i))return msg('Those points were already awarded to this team.');const p=Number(a.dataset.points);push(`Award ${p}`);s.scores[i]+=p;s.awardedTeams.push(i);pointAwardSound();msg(`+${p} to ${s.teamNames[i]}`);render()});const name=c.querySelector('.team-name'),amt=c.querySelector('.adjust-input');name.addEventListener('change',()=>{push('Rename team');s.teamNames[i]=name.value.trim()||`Team ${i+1}`;render()});c.querySelector('.plus-btn').onclick=()=>{const a=Math.abs(Number(amt.value))||0;if(!a)return;push(`Manual +${a}`);s.scores[i]+=a;pointAwardSound();render()};c.querySelector('.minus-btn').onclick=()=>{const a=Math.abs(Number(amt.value))||0;if(!a)return;push(`Manual -${a}`);s.scores[i]-=a;render()}});
+previewAdjustments.querySelectorAll('[data-preview-action]').forEach(b=>b.addEventListener('click',()=>adjustPreview(b.dataset.previewAction)));pause.onclick=()=>running?stop():start();resetTimerBtn.onclick=()=>resetTimer(false);answerTimerBtn.onclick=startAnswer;closeTimerBtn.onclick=returnBoard;document.getElementById('mcPauseButton').onclick=()=>running?stop():start();document.getElementById('mcResetTimerButton').onclick=()=>resetTimer(false);document.getElementById('mcAnswerTimerButton').onclick=startAnswer;document.getElementById('setCustomTimerButton').onclick=()=>setCustomRoundTime('mc');['customMinutes','customSeconds'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')setCustomRoundTime('mc')}));document.getElementById('classroomSetCustomTimerButton').onclick=()=>setCustomRoundTime('classroom');['classroomCustomMinutes','classroomCustomSeconds'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')setCustomRoundTime('classroom')}));document.getElementById('mcReturnBtn').onclick=returnBoard;document.getElementById('generateBtn').onclick=()=>chooseItem(false);revealHintBtn.onclick=revealNextHint;showAudienceBtn.onclick=toggleReveal;document.getElementById('soundToggleBtn').onclick=()=>{soundEnabled=!soundEnabled;localStorage.setItem(K+'_SOUND',soundEnabled?'on':'off');updateSoundButton();if(soundEnabled){audio();tone(660,.12,.06,'sine',0);tone(880,.18,.06,'sine',.1)}};document.getElementById('regenerateBtn').onclick=()=>chooseItem(true);document.getElementById('restoreItemBtn').onclick=restorePrevious;document.getElementById('resetUsedItemsBtn').onclick=()=>{const t=activeTile();if(!t)return;if(!confirm(`Reset all used ${t.dataset.category} items?`))return;push('Reset used items');s.usedItems[t.dataset.category]=[];s.currentItem=null;s.previousItem=null;renderGenerator();save()};document.getElementById('openAudienceBtn').onclick=openAudience;
+undo.onclick=()=>{const e=s.history.pop();if(!e)return;const h=[...s.history];s={...s,...e.snapshot,history:h};render()};document.getElementById('resetBoardBtn').onclick=()=>{if(!confirm('Reset all used tiles and clear the active points?'))return;push('Reset board');s.usedTiles={};s.activeTileId=null;s.awardedTeams=[];s.view='board';render()};document.getElementById('resetScoresBtn').onclick=()=>{if(!confirm('Reset all team scores to zero?'))return;push('Reset scores');s.scores=[0,0,0,0];render()};
+}
+async function full(){if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}document.getElementById('fullBtn').onclick=full;document.addEventListener('keydown',e=>{const typing=e.target.matches('input,textarea,select');if(e.code==='Space'&&s.view==='question'&&!isAudience&&!typing){e.preventDefault();running?stop():start()}if(e.key==='Escape'&&s.view==='question'&&!isAudience)returnBoard();if(e.key.toLowerCase()==='r'&&s.view==='question'&&!isAudience&&!typing){e.preventDefault();toggleReveal()}if(e.key.toLowerCase()==='f'&&!typing)full()});
+const modeChooser=document.getElementById('modeChooser');
+if(!isAudience&&!isClassroom&&!isEvent){modeChooser.hidden=false;document.getElementById('app').style.visibility='hidden'}
+document.getElementById('eventModeBtn').onclick=()=>{location.search='?mode=event'};
+document.getElementById('classroomModeBtn').onclick=()=>{location.search='?classroom=1'};
+document.getElementById('changeModeBtn').onclick=()=>{location.href=location.href.split('?')[0].split('#')[0]};
+if(!isAudience)load();updateSoundButton();render();if(isAudience){document.getElementById('rotateNotice').style.display='none';}
+})();
+/* v3.17: Requested splash, classroom timer, branding, and category image-fit updates. */
+</script></body></html>
