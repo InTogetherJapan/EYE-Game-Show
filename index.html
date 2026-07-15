@@ -406,6 +406,19 @@ body.audience-mode #hintCard{width:min(980px,88vw)}
 .classroom-custom-timer{margin-top:14px}
 #questionImage{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important}
 </style>
+
+<style id="mc-preview-fit-fix">
+/* Two Display mode: keep the private MC preview fully inside its card. */
+.event-mode #mcQuestionView .preview-card{overflow:hidden}
+.event-mode #mcQuestionView #itemPreview{
+  width:100%;
+  height:auto;
+  max-width:100%;
+  max-height:260px;
+  object-fit:contain;
+  object-position:center center;
+}
+</style>
 </head><body><div id="modeChooser" hidden><div class="mode-card"><div class="mode-brand"><img class="mode-logo" src="assets/002-7af61605bdf3.png" alt="Express Yourself Expo"><div class="mode-title">Q&amp;A GAME SHOW</div><div class="mode-event-details">Sunday, November 15 • Nagoya International School</div><a class="mode-learn-more" href="https://intogether.jp/eye-expo" target="_blank" rel="noopener noreferrer">Learn More About EYE</a></div><p>How will you use the Game Show today?</p><div class="mode-options"><button class="mode-option" id="eventModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span><span class="tv-icon"></span></span><strong>Two Displays</strong><small>Use the MC controls on your computer and show the Game Board on a TV or projector.</small><span class="mode-recommended">FULL EVENT MODE</span></button><button class="mode-option" id="classroomModeBtn"><span class="mode-icon" aria-hidden="true"><span class="tv-icon"></span></span><strong>One Display</strong><small>Use the Game Board, timer, PDFs, and score controls together on one screen.</small><span class="mode-recommended">CLASSROOM MODE</span></button></div><div class="mode-developer"><span>Developed by</span><img src="assets/003-51a1b6c0f0ed.png" alt="InTogether"></div></div></div>
 <div id="rotateNotice">
   📱<br/><br/>Please rotate your phone sideways to use the Game Show board.
