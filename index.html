@@ -367,6 +367,30 @@ body.audience-mode #hintCard{width:min(980px,88vw)}
 #modeChooser[hidden]{display:none}.mode-card{width:min(940px,96vw);background:linear-gradient(180deg,rgba(58,20,60,.97),rgba(21,17,25,.98));border:2px solid rgba(244,157,218,.42);border-radius:30px;padding:clamp(22px,3.5vw,42px);box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 38px rgba(207,0,110,.15);text-align:center}.mode-brand{display:flex;flex-direction:column;align-items:center;margin-bottom:10px}.mode-logo{width:min(390px,72vw);height:auto;display:block;filter:drop-shadow(0 10px 20px rgba(0,0,0,.3))}.mode-title{margin:-2px 0 8px;font-size:clamp(28px,4vw,48px);font-weight:1000;letter-spacing:.055em;color:#fff;text-shadow:0 3px 0 #7e2173,0 0 18px rgba(244,157,218,.28)}.mode-card>p{color:#f2d9eb;margin:0 0 26px;font-size:clamp(16px,2vw,20px)}.mode-options{display:grid;grid-template-columns:1fr 1fr;gap:18px}.mode-option{border:2px solid rgba(255,255,255,.2);border-radius:22px;background:linear-gradient(180deg,rgba(126,33,115,.58),rgba(54,23,62,.72));color:#fff;padding:24px 20px;cursor:pointer;text-align:center;transition:.18s;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.mode-option:hover{transform:translateY(-3px);border-color:#f49fda;background:linear-gradient(180deg,rgba(207,0,110,.72),rgba(76,27,83,.86));box-shadow:0 12px 28px rgba(0,0,0,.28)}.mode-icon{min-height:66px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}.tv-icon{position:relative;display:inline-block;width:76px;height:50px;border:4px solid #fff;border-radius:7px;background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.08)}.tv-icon:before{content:'';position:absolute;left:50%;bottom:-12px;width:4px;height:10px;background:#fff;transform:translateX(-50%)}.tv-icon:after{content:'';position:absolute;left:50%;bottom:-15px;width:34px;height:4px;border-radius:4px;background:#fff;transform:translateX(-50%)}.mode-option strong{font-size:25px;display:block;margin-bottom:7px}.mode-option small{font-size:15px;line-height:1.45;color:#f0e6ef;display:block}.mode-recommended{display:inline-block;margin-top:13px;background:#cf006e;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 11px;font-weight:900;font-size:12px;letter-spacing:.04em}.mode-back{grid-column:1/-1;background:transparent!important;border:1px solid rgba(255,255,255,.2)!important}@media(max-width:680px){.mode-options{grid-template-columns:1fr}.mode-logo{width:min(310px,78vw)}.tv-icon{width:64px;height:43px}}
 .classroom-mode #openAudienceBtn,.classroom-mode #audienceStatus{display:none}.classroom-mode #sidebar h1:after{content:' · Classroom Mode';font-size:13px;color:#bbb;font-weight:400}.classroom-mode #audienceScoreBar{display:grid}.classroom-mode #main{padding-top:76px}.classroom-mode #board{max-height:calc(100vh - 92px);width:min(100%,calc((100vh - 92px)*2048/1860))}.classroom-mode #questionView{top:76px}.classroom-mode #controls{margin-top:8px}.classroom-mode #changeModeBtn{display:block}.event-mode #changeModeBtn{display:block}#changeModeBtn{display:none}
 @media(max-width:760px){.mode-options{grid-template-columns:1fr}.mode-card{padding:22px}.mode-option{padding:18px}.mode-icon{font-size:34px}}
+
+/* Touch-device scrolling fix: preserve desktop layout while allowing tablet/phone panels to scroll. */
+@media (pointer: coarse) {
+  html, body {
+    overscroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #sidebar, #main, .mc-question-card, #timerPanel {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 700px) {
+  #app { overflow: auto; }
+  #sidebar { overflow-y: auto; overflow-x: hidden; }
+  #main { overflow: auto; }
+}
+
+@media (orientation: portrait) and (min-width: 761px) and (pointer: coarse) {
+  html, body { overflow-y: auto; }
+  #app { min-height: 100dvh; height: auto; }
+  #sidebar { overflow-y: auto; }
+  #main { min-height: 100dvh; overflow: auto; }
+}
 </style>
 <style id="v3-10-1-audience-image-fit">
 /* v3.10.1.1: guaranteed full-image audience reveal with visible breathing room */
